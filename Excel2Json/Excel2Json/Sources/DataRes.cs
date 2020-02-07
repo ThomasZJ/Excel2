@@ -13,6 +13,7 @@ namespace Excel2
     class DataRes
     {
     }
+
     public class ListViewItemData
     {
         public string ID { get; set; }

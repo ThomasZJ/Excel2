@@ -1,13 +1,19 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Media;
+using System.Xml;
 using ICSharpCode.AvalonEdit;
-
+using ICSharpCode.AvalonEdit.Folding;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Excel2
@@ -35,8 +41,8 @@ namespace Excel2
         private ProgressBar mProgressBar;
         private Grid mMainGrid;
 
-        private TextEditor mJson_TextBox;
-        private TextEditor mDotTemplate_TextBox;
+        private TextEditor mTextView;
+        //private TextEditor mDotTemplate_TextBox;
 
         private ListView mExcelListView;
 
@@ -65,6 +71,9 @@ namespace Excel2
         /// </summary>
         private bool TSRadioBtnChecked { get; set; }
 
+        private bool JsonRadioBtnChecked { get; set; }
+        private bool TemplateRadioBtnChecked { get; set; }
+
         /// <summary>
         /// 导出模板文件类型
         /// </summary>
@@ -90,6 +99,11 @@ namespace Excel2
         /// </summary>
         public string SheetSign { private set; get; }
 
+        private string JsonData { get; set; }
+
+        private string TemplateData { get; set; }
+
+
 
         private BackgroundWorker mBgworker;
         private DoWorkEventHandler mDoWorkEventHandler;
@@ -98,6 +112,10 @@ namespace Excel2
 
         private BackgroundWorker mBgShowFileList;
         private DoWorkEventHandler mDoShowFileHandler;
+
+        private IHighlightingDefinition JsonHighlighting;
+        private IHighlightingDefinition CSHighlighting;
+        private IHighlightingDefinition TSHighlighting;
 
         public MainWindow()
         {
@@ -133,6 +151,28 @@ namespace Excel2
             if (TSRadioBtnChecked) Type = TemplateType.TS;
             if (!CSRadioBtnChecked && !TSRadioBtnChecked) Type = TemplateType.CS;
 
+
+            StreamReader stream = new StreamReader(Application.GetResourceStream(new Uri("Resources/JsonDark.xshd", UriKind.Relative)).Stream, Encoding.UTF8);
+            using (XmlTextReader reader = new XmlTextReader(stream))
+            {
+                JsonHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                reader.Close();
+                stream.Close();
+            }
+            stream = new StreamReader(Application.GetResourceStream(new Uri("Resources/CSDark.xshd", UriKind.Relative)).Stream, Encoding.UTF8);
+            using (XmlTextReader reader = new XmlTextReader(stream))
+            {
+                CSHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                reader.Close();
+                stream.Close();
+            }
+            stream = new StreamReader(Application.GetResourceStream(new Uri("Resources/TSDark.xshd", UriKind.Relative)).Stream, Encoding.UTF8);
+            using (XmlTextReader reader = new XmlTextReader(stream))
+            {
+                TSHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+                reader.Close();
+                stream.Close();
+            }
             //this.Width = this.MinWidth;
         }
 
@@ -163,14 +203,17 @@ namespace Excel2
 
             mMutilsheet_Checkbox = mMainGrid.FindName("mutilsheet_checkbox") as CheckBox;
 
-            mJson_TextBox = mMainGrid.FindName("jsontabitem") as TextEditor;
-            mDotTemplate_TextBox = mMainGrid.FindName("dotcsfiletabitem") as TextEditor;
+            mTextView = mMainGrid.FindName("textview") as TextEditor;
+            //mDotTemplate_TextBox = mMainGrid.FindName("dotcsfiletabitem") as TextEditor;
 
             mExcelListView = mMainGrid.FindName("excelfile_listview") as ListView;
             mExcelListView.ItemsSource = ListViweItemData;
 
             mDotcs_RadioBtn = mMainGrid.FindName("dotcs_radiobtn") as RadioButton;
             mDotts_RadioBtn = mMainGrid.FindName("dotts_radiobtn") as RadioButton;
+
+            //mDotJsonView_RadioBtn = mMainGrid.FindName("jsonradiobtn") as RadioButton;
+            //mDotFilesView_RadioBtn = mMainGrid.FindName("dotfileradiobtn") as RadioButton;
 
             if (mBegin_btn != null)
             {
@@ -200,6 +243,8 @@ namespace Excel2
             mDotts_RadioBtn.IsChecked = TSRadioBtnChecked;
 
             if (!CSRadioBtnChecked && !TSRadioBtnChecked) mDotcs_RadioBtn.IsChecked = true;
+
+            mTextView.SyntaxHighlighting = JsonHighlighting;
         }
 
         private void Button_ClickAsync(object sender, RoutedEventArgs e)
@@ -271,8 +316,6 @@ namespace Excel2
 
                 ShowFileList();
             }
-            else if (cb.Name.Equals("csfile_checkbox")) { }
-            else if (cb.Name.Equals("hfile_checkbox")) { }
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -412,8 +455,12 @@ namespace Excel2
                     }
                 }
             }
-            mJson_TextBox.Text = json;
-            mDotTemplate_TextBox.Text = template;
+
+            JsonData = json;
+            TemplateData = template;
+            if (TemplateRadioBtnChecked) mTextView.Text = TemplateData;
+            if (JsonRadioBtnChecked) mTextView.Text = JsonData;
+            //mDotTemplate_TextBox.Text = template;
         }
 
         private void Radiobtn_Checked(object sender, RoutedEventArgs e)
@@ -431,8 +478,30 @@ namespace Excel2
                     CSRadioBtnChecked = true;
                     TSRadioBtnChecked = false;
                     break;
-            }
+                case "jsonradiobtn":
+                    TemplateRadioBtnChecked = false;
+                    JsonRadioBtnChecked = true;
+                    if (mTextView != null)
+                    {
+                        mTextView.SyntaxHighlighting = JsonHighlighting;
+                        mTextView.Text = JsonData;
+                    }
+                    return;
+                case "dotfileradiobtn":
+                    TemplateRadioBtnChecked = true;
+                    JsonRadioBtnChecked = false;
+                    if (mTextView != null)
+                    {
+                        if (CSRadioBtnChecked)
+                            mTextView.SyntaxHighlighting = CSHighlighting;
+                        else if (TSRadioBtnChecked)
+                            mTextView.SyntaxHighlighting = TSHighlighting;
 
+                        mTextView.Foreground = Brushes.White;
+                        mTextView.Text = TemplateData;
+                    }
+                    return;
+            }
             Properties.Settings.Default.CSRadioBtnChecked = CSRadioBtnChecked;
             Properties.Settings.Default.TSRadioBtnChecked = TSRadioBtnChecked;
             ShowFileList();
@@ -513,10 +582,9 @@ namespace Excel2
 
         private void ShowFileList()
         {
-            mJson_TextBox?.Clear();
-            mDotTemplate_TextBox?.Clear();
+            mTextView?.Clear();
             ListViweItemData?.Clear();
-            mDataManages.ClearData();
+            mDataManages?.ClearData();
             //this.Width = this.MinWidth;
 
             if (Directory.Exists(ExcelPath) && mExcelListView != null)
@@ -531,7 +599,7 @@ namespace Excel2
                     }
                 }
             }
-            if (!mBgShowFileList.IsBusy)
+            if (mBgShowFileList != null && !mBgShowFileList.IsBusy)
                 mBgShowFileList.RunWorkerAsync();
 
             if (mProgressBar != null)
