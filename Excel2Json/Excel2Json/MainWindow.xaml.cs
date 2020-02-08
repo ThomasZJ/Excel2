@@ -2,18 +2,16 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Xml;
 using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using MahApps.Metro.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Excel2
@@ -21,7 +19,7 @@ namespace Excel2
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private Button mExcelPath_btn;
         private Button mJsonPath_btn;
@@ -35,8 +33,10 @@ namespace Excel2
 
         private RadioButton mDotcs_RadioBtn;
         private RadioButton mDotts_RadioBtn;
+        private RadioButton mJsonView_RadioBtn;
+        private RadioButton mTemplateView_RadioBtn;
 
-        private CheckBox mMutilsheet_Checkbox;
+        private ToggleButton mMutilsheet_Checkbox;
 
         private ProgressBar mProgressBar;
         private Grid mMainGrid;
@@ -102,8 +102,6 @@ namespace Excel2
         private string JsonData { get; set; }
 
         private string TemplateData { get; set; }
-
-
 
         private BackgroundWorker mBgworker;
         private DoWorkEventHandler mDoWorkEventHandler;
@@ -201,9 +199,10 @@ namespace Excel2
             mDotTemplateFilePath_TextBox = mMainGrid.FindName("templatefilepath_textbox") as TextBox;
             mSignsheet_Textbox = mMainGrid.FindName("signsheet_textbox") as TextBox;
 
-            mMutilsheet_Checkbox = mMainGrid.FindName("mutilsheet_checkbox") as CheckBox;
+            mMutilsheet_Checkbox = mMainGrid.FindName("mutilsheet_ToggleBtn") as ToggleButton;
 
             mTextView = mMainGrid.FindName("textview") as TextEditor;
+            mTextView.Foreground = Brushes.White;
             //mDotTemplate_TextBox = mMainGrid.FindName("dotcsfiletabitem") as TextEditor;
 
             mExcelListView = mMainGrid.FindName("excelfile_listview") as ListView;
@@ -212,8 +211,8 @@ namespace Excel2
             mDotcs_RadioBtn = mMainGrid.FindName("dotcs_radiobtn") as RadioButton;
             mDotts_RadioBtn = mMainGrid.FindName("dotts_radiobtn") as RadioButton;
 
-            //mDotJsonView_RadioBtn = mMainGrid.FindName("jsonradiobtn") as RadioButton;
-            //mDotFilesView_RadioBtn = mMainGrid.FindName("dotfileradiobtn") as RadioButton;
+            mJsonView_RadioBtn = mMainGrid.FindName("jsonradiobtn") as RadioButton;
+            mTemplateView_RadioBtn = mMainGrid.FindName("templateradiobtn") as RadioButton;
 
             if (mBegin_btn != null)
             {
@@ -264,16 +263,13 @@ namespace Excel2
             if (!isExistExclePath || !isExistJsonPath)
             {
                 if (!isExistExclePath)
-                    MessageBox.Show("ExcelPath does not exist!", "Directory not exist!");
-
+                    _ = MessageBox.Show("ExcelPath does not exist!", "Directory not exist!");
                 else if (!isExistJsonPath)
-                    MessageBox.Show("JsonPath does not exist!", "Directory not exist");
-
+                    _ = MessageBox.Show("JsonPath does not exist!", "Directory not exist");
                 SetUIStates(true);
             }
             else
             {
-                //TODO
                 mProgressBar.Maximum = mDataManages.FilesCount(HeadNum, isExistTemplatePath);
                 mProgressBar.Value = 0;
                 mBgworker.WorkerReportsProgress = true;
@@ -304,18 +300,14 @@ namespace Excel2
                 mDotTemplateFilePath_TextBox.Text = mFolderDialog.FileName; // FolderDialog.SelectedPath.Trim();
         }
 
-        private void Multi_Checked(object sender, RoutedEventArgs e)
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = sender as CheckBox;
+            ToggleButton cb = sender as ToggleButton;
+            MultiSheet = (bool)cb.IsChecked;
+            Properties.Settings.Default.MultiSheet = MultiSheet;
+            mSignsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
 
-            if (cb.Name.Equals("mutilsheet_checkbox"))
-            {
-                MultiSheet = (bool)cb.IsChecked;
-                Properties.Settings.Default.MultiSheet = MultiSheet;
-                mSignsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
-
-                ShowFileList();
-            }
+            ShowFileList();
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -378,6 +370,7 @@ namespace Excel2
             e.Handled = true;
 
         }
+
         private void Textbox_DragDrop(object sender, DragEventArgs e)
         {
             TextBox tb = sender as TextBox;
@@ -422,7 +415,7 @@ namespace Excel2
         private void ListView_MouseClick(object sender, RoutedEventArgs e)
         {
             if (!(mExcelListView.SelectedItem is ListViewItemData obj)) return;
-            //this.Width = 1075;
+            //this.Width = 1220;
             string name = obj.FileInfo.Name.Split('.')[0];
             string json = "";
             string template = "";
@@ -458,8 +451,8 @@ namespace Excel2
 
             JsonData = json;
             TemplateData = template;
-            if (TemplateRadioBtnChecked) mTextView.Text = TemplateData;
             if (JsonRadioBtnChecked) mTextView.Text = JsonData;
+            if (TemplateRadioBtnChecked) mTextView.Text = TemplateData;
             //mDotTemplate_TextBox.Text = template;
         }
 
@@ -487,7 +480,7 @@ namespace Excel2
                         mTextView.Text = JsonData;
                     }
                     return;
-                case "dotfileradiobtn":
+                case "templateradiobtn":
                     TemplateRadioBtnChecked = true;
                     JsonRadioBtnChecked = false;
                     if (mTextView != null)
@@ -496,8 +489,6 @@ namespace Excel2
                             mTextView.SyntaxHighlighting = CSHighlighting;
                         else if (TSRadioBtnChecked)
                             mTextView.SyntaxHighlighting = TSHighlighting;
-
-                        mTextView.Foreground = Brushes.White;
                         mTextView.Text = TemplateData;
                     }
                     return;
@@ -506,6 +497,7 @@ namespace Excel2
             Properties.Settings.Default.TSRadioBtnChecked = TSRadioBtnChecked;
             ShowFileList();
         }
+
         // =======================================
 
         private void BgworkChange(object sender, ProgressChangedEventArgs e)
@@ -585,6 +577,10 @@ namespace Excel2
             mTextView?.Clear();
             ListViweItemData?.Clear();
             mDataManages?.ClearData();
+            JsonRadioBtnChecked = true;
+            TemplateRadioBtnChecked = false;
+            mJsonView_RadioBtn.IsChecked = JsonRadioBtnChecked;
+            mTemplateView_RadioBtn.IsChecked = TemplateRadioBtnChecked;
             //this.Width = this.MinWidth;
 
             if (Directory.Exists(ExcelPath) && mExcelListView != null)
@@ -607,4 +603,3 @@ namespace Excel2
         }
     }
 }
-
