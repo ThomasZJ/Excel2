@@ -75,7 +75,7 @@
     </Win32Resource>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\icon2.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\icon3.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -217,6 +217,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon4.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -11,15 +11,16 @@ using System.Xml;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using MahApps.Metro.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 
 namespace Excel2
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : Window
     {
         private Button mExcelPath_btn;
         private Button mJsonPath_btn;
@@ -47,7 +48,7 @@ namespace Excel2
         private ListView mExcelListView;
 
         private readonly DataManages mDataManages;
-        private ObservableCollection<ListViewItemData> ListViweItemData;
+        private readonly ObservableCollection<ListViewItemData> ListViweItemData;
 
         public string FileName { get; set; }
 
@@ -103,17 +104,17 @@ namespace Excel2
 
         private string TemplateData { get; set; }
 
-        private BackgroundWorker mBgworker;
-        private DoWorkEventHandler mDoWorkEventHandler;
-        private ProgressChangedEventHandler mProgressChangedEventHandler;
-        private CommonOpenFileDialog mFolderDialog;
+        private readonly BackgroundWorker mBgworker;
+        private readonly DoWorkEventHandler mDoWorkEventHandler;
+        private readonly ProgressChangedEventHandler mProgressChangedEventHandler;
+        private readonly CommonOpenFileDialog mFolderDialog;
 
-        private BackgroundWorker mBgShowFileList;
-        private DoWorkEventHandler mDoShowFileHandler;
+        private readonly BackgroundWorker mBgShowFileList;
+        private readonly DoWorkEventHandler mDoShowFileHandler;
 
-        private IHighlightingDefinition JsonHighlighting;
-        private IHighlightingDefinition CSHighlighting;
-        private IHighlightingDefinition TSHighlighting;
+        private readonly IHighlightingDefinition JsonHighlighting;
+        private readonly IHighlightingDefinition CSHighlighting;
+        private readonly IHighlightingDefinition TSHighlighting;
 
         public MainWindow()
         {
@@ -179,7 +180,7 @@ namespace Excel2
             //this.Width = this.MinWidth;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             mBgShowFileList.DoWork -= mDoWorkEventHandler;
             Properties.Settings.Default.Save();
@@ -202,7 +203,6 @@ namespace Excel2
             mMutilsheet_Checkbox = mMainGrid.FindName("mutilsheet_ToggleBtn") as ToggleButton;
 
             mTextView = mMainGrid.FindName("textview") as TextEditor;
-            mTextView.Foreground = Brushes.White;
             //mDotTemplate_TextBox = mMainGrid.FindName("dotcsfiletabitem") as TextEditor;
 
             mExcelListView = mMainGrid.FindName("excelfile_listview") as ListView;
@@ -244,6 +244,8 @@ namespace Excel2
             if (!CSRadioBtnChecked && !TSRadioBtnChecked) mDotcs_RadioBtn.IsChecked = true;
 
             mTextView.SyntaxHighlighting = JsonHighlighting;
+
+            SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
         }
 
         private void Button_ClickAsync(object sender, RoutedEventArgs e)
@@ -368,7 +370,6 @@ namespace Excel2
             //TextBox tb = sender as TextBox;
             e.Effects = DragDropEffects.Copy;
             e.Handled = true;
-
         }
 
         private void Textbox_DragDrop(object sender, DragEventArgs e)
@@ -498,6 +499,16 @@ namespace Excel2
             ShowFileList();
         }
 
+        private void ListBoxItem_MouseClick(object sender, RoutedEventArgs e)
+        {
+            string name = (sender as ListBoxItem).Name;
+            if (name.Equals("Light") || name.Equals("Dark"))
+                Properties.Settings.Default.Theme = name;
+            else
+                Properties.Settings.Default.Color = name;
+            SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
+        }
+        
         // =======================================
 
         private void BgworkChange(object sender, ProgressChangedEventArgs e)
@@ -600,6 +611,109 @@ namespace Excel2
 
             if (mProgressBar != null)
                 mProgressBar.Value = 0;
+        }
+
+        private void SetColor(string _colorName, string _theme)
+        {
+            Color primaryColor = SwatchHelper.Lookup[MaterialDesignColor.DeepOrange];
+            Color accentColor = SwatchHelper.Lookup[MaterialDesignColor.DeepOrange];
+            IBaseTheme theme = new MaterialDesignDarkTheme();
+            switch (_colorName)
+            {
+                case "Light":
+                    theme = new MaterialDesignLightTheme();
+                    break;
+                case "Dark":
+                    theme = new MaterialDesignDarkTheme();
+                    break;
+                case "Yellow":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Yellow];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Yellow];
+                    break;
+                case "Amber":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Amber];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Amber];
+                    break;
+                case "DeepOrange":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.DeepOrange];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.DeepOrange];
+                    break;
+                case "Lightblue":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.LightBlue];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.LightBlue];
+                    break;
+                case "Teal":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Teal];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Teal];
+                    break;
+                case "Cyan":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Cyan];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Cyan];
+                    break;
+                case "Pink":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Pink];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Pink];
+                    break;
+                case "Green":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Green];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Green];
+                    break;
+                case "DeepPurple":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.DeepPurple];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.DeepPurple];
+                    break;
+                case "Indigo":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Indigo];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Indigo];
+                    break;
+                case "Blue":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Blue];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Blue];
+                    break;
+                case "Lime":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Lime];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Lime];
+                    break;
+                case "Red":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Red];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Red];
+                    break;
+                case "Orange":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Orange];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Orange];
+                    break;
+                case "Purple":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Purple];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Purple];
+                    break;
+                case "BlueGrey":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.BlueGrey];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.BlueGrey];
+                    break;
+                case "Grey":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Grey];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Grey];
+                    break;
+                case "Brown":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Brown];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.Brown];
+                    break;
+            }
+
+            switch (_theme)
+            {
+                case "Light":
+                    theme = new MaterialDesignLightTheme();
+                    mTextView.Foreground = Brushes.Black;
+                    break;
+                case "Dark":
+                    theme = new MaterialDesignDarkTheme();
+                    mTextView.Foreground = Brushes.White;
+                    break;
+            }
+
+            ITheme themes = Theme.Create(theme, primaryColor, accentColor);
+            Resources.SetTheme(themes);
         }
     }
 }

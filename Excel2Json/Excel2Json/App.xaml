@@ -3,11 +3,11 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
-                <!-- MahApps -->
+                <!-- MahApps --><!--
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml"/>-->
                 
                 <!--設定主題背景色-->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
@@ -19,11 +19,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.DeepOrange.xaml" />
 
                 <!-- Material Design: MahApps Compatibility -->
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
 
         <!-- MahApps Brushes -->
-        <SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource Primary700}"/>
+        <!--<SolidColorBrush x:Key="HighlightBrush" Color="{DynamicResource Primary700}"/>
         <SolidColorBrush x:Key="AccentColorBrush" Color="{DynamicResource Primary500}"/>
         <SolidColorBrush x:Key="AccentColorBrush2" Color="{DynamicResource Primary400}"/>
         <SolidColorBrush x:Key="AccentColorBrush3" Color="{DynamicResource Primary300}"/>
@@ -33,7 +33,7 @@
         <SolidColorBrush x:Key="WindowTitleColorBrush" Color="{DynamicResource Primary700}"/>
         <SolidColorBrush x:Key="AccentSelectedColorBrush" Color="{DynamicResource Primary500Foreground}"/>
         <SolidColorBrush x:Key="IdealForegroundColorBrush" Color="{DynamicResource Primary500Foreground}"/>
-        <SolidColorBrush x:Key="IdealForegroundDisabledBrush" Color="{DynamicResource Primary500}" Opacity="0.4"/>
+        <SolidColorBrush x:Key="IdealForegroundDisabledBrush" Color="{DynamicResource Primary500}" Opacity="0.4"/>-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>
