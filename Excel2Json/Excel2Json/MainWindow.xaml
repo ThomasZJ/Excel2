@@ -5,7 +5,7 @@
     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" 
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
     TextElement.Foreground="{DynamicResource MaterialDesignBody}" TextElement.FontWeight="Regular" TextElement.FontSize="13" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto" Background="{DynamicResource MaterialDesignPaper}" FontFamily="{DynamicResource MaterialDesignFont}"
-      MinWidth="610" Width="1220" MinHeight="400" Height="860"
+      MinWidth="615" Width="1220" MinHeight="405" Height="880"
       WindowStartupLocation="CenterScreen">
 
     <Grid Loaded="Grid_Loaded">
@@ -21,7 +21,7 @@
                                 Dark
                             </ListBoxItem>
                             <ListBoxItem Style="{StaticResource MaterialDesignListBoxItem}">
-                                
+
                             </ListBoxItem>
                             <ListBoxItem x:Name="Yellow" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
                                 Yellow
@@ -102,18 +102,25 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Margin="0,0,0,0" VerticalAlignment="Stretch">
-                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" VerticalAlignment="Top">
                     <TextBox materialDesign:HintAssist.Hint="Excel files path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="exclepath_textbox" Margin="10,0,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop"/>
-
                     <TextBox materialDesign:HintAssist.Hint="json path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="jsonpath_textbox" Margin="10,40,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop"/>
-
                     <TextBox materialDesign:HintAssist.Hint="Template Classes files path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="templatefilepath_textbox" Margin="10,80,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop"/>
 
-                    <Button x:Name="excelpath_btn" Content="..." Margin="0,12,10,0" VerticalAlignment="Top" Height="25" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
-                    <Button x:Name="jsonpath_btn" Content="..." Margin="0,52,10,0" VerticalAlignment="Top" Height="25" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
-                    <Button x:Name="templatefilepath_btn" Content="..." Margin="0,92,10,0" VerticalAlignment="Top" Height="25" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
+                    <Button x:Name="excelpath_btn" Content="..." Margin="0,5,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
+                    <Button x:Name="jsonpath_btn" Content="..." Margin="0,45,10,0" VerticalAlignment="Top"  Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
+                    <Button x:Name="templatefilepath_btn" Content="..." Margin="0,85,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
 
-                    <ListView x:Name="excelfile_listview" Margin="10,125,10,165" MouseLeftButtonUp="ListView_MouseClick">
+                </Grid>
+                <Grid Grid.Row="1" VerticalAlignment="Top" Margin="0,20,0,20">
+                    <ListView x:Name="excelfile_listview" Margin="10,0,10,0" MouseLeftButtonUp="ListView_MouseClick" Cursor="Hand">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}"/>
@@ -121,35 +128,81 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="begin_btn" Content="Begin" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="28" VerticalContentAlignment="Bottom" Margin="70,0,70,15" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
-                    <Label Style="{StaticResource MaterialDesignLabel}" Content="Head" Margin="0,0,70,130" VerticalAlignment="Bottom" BorderBrush="#00000000" Height="26" HorizontalAlignment="Right" Width="47"/>
-                    <ComboBox x:Name="filternum_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,10,130" Height="26" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsReadOnly="True" Width="60">
-                        <Label Content="1" Background="#00000000" BorderBrush="#00000000" Width="50" />
-                        <Label Content="2" Background="#00000000" BorderBrush="#00000000" Width="50" />
-                        <Label Content="3" Background="#00000000" BorderBrush="#00000000" Width="50" />
-                    </ComboBox>
+                </Grid>
+                <Grid Grid.Row="2" VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" Margin="0,0,10,0">
+                        <ToggleButton x:Name="mutilsheet_togglebtn" Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Multi Sheet" HorizontalAlignment="Left" Margin="34,0,0,98" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" />
+                        <Label x:Name="mutilsheet_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="Multi Sheet" VerticalAlignment="Bottom" />
 
-                    <ToggleButton x:Name="mutilsheet_ToggleBtn" Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Multi Sheet" HorizontalAlignment="Left" Margin="10,0,0,122" VerticalAlignment="Bottom" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" Height="26" />
-                    <Label HorizontalAlignment="Left" Margin="50,0,0,122" VerticalAlignment="Bottom" Content="Multi Sheet" />
+                        <TextBox materialDesign:HintAssist.Hint="Tags" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="signsheet_textbox" HorizontalAlignment="Left" Margin="73,0,0,99" Width="120" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom"/>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Label Style="{StaticResource MaterialDesignLabel}" FontSize="10"  Content="Head" Margin="10,0,0,120" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="31"/>
+                        <ComboBox x:Name="filternum_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="10,0,0,88" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Left" Width="60" >
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="1" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="2" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="3" Width="50" />
+                        </ComboBox>
 
-                    <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="dotcs_radiobtn" Content="csharp" Margin="10,0,0,90" HorizontalAlignment="Left" VerticalAlignment="Bottom" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked"/>
+                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="dotcs_radiobtn" Content=".cs" Margin="10,0,0,56" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked"  VerticalAlignment="Bottom"/>
 
-                    <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="dotts_radiobtn" Content="typescript" Margin="10,0,0,65" HorizontalAlignment="Left" VerticalAlignment="Bottom" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked"/>
+                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="dotts_radiobtn" Content=".ts" Margin="10,0,0,33" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>
 
-                    <TextBox materialDesign:HintAssist.Hint="Exclude tags" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="signsheet_textbox" HorizontalAlignment="Left" Margin="130,0,0,119" Width="90" VerticalAlignment="Bottom" TextChanged="TextBox_TextChanged"/>
-                    <ProgressBar x:Name="progressbar" Height="5" Margin="0" VerticalAlignment="Bottom" Value="90">
-                    </ProgressBar>
+                        <!--<RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="dotpy_radiobtn" Content=".py" Margin="10,0,0,10" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>
+                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="x3" Content=".cs" Margin="54,0,0,56" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked"  VerticalAlignment="Bottom"/>
+                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="x2" Content=".ts" Margin="54,0,0,33" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>
+                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="x1" Content=".py" Margin="54,0,0,10" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>-->
+
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <Label x:Name="encryption_label"  Style="{StaticResource MaterialDesignLabel}" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="DES Encryption" VerticalAlignment="Bottom" />
+                        <ToggleButton x:Name="encryption_togglebtn" Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Encryption" HorizontalAlignment="Left" Margin="10,0,0,98" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" />
+
+                        <Label x:Name="encryption_mode_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" Margin="0,0,75,120" Content="Mode" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="34" />
+                        <ComboBox x:Name="encryption_mode_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,75,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60">
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="CBC" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="ECB" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="OFB" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="CFB" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="CTS" Width="50" />
+                        </ComboBox>
+
+                        <Label x:Name="encryption_padding_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" Margin="0,0,10,120" Content="Padding" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="44" />
+                        <ComboBox x:Name="encryption_padding_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,10,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60">
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="None" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="PKCS7" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="Zeros" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="ANSIX923" Width="50" />
+                            <Label Style="{StaticResource MaterialDesignLabel}" Content="ISO10126" Width="50" />
+                        </ComboBox>
+                        <TextBox x:Name="encryptionkey_textbox" materialDesign:HintAssist.Hint="Key of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,50" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1"/>
+                        <TextBox x:Name="encryptioniv_textbox" materialDesign:HintAssist.Hint="IV of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,10" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1"/>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Bottom">
+                    <Button x:Name="begin_btn" Content="Begin" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="28" VerticalContentAlignment="Bottom" Margin="70,0,70,10" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
                 </Grid>
             </Grid>
             <Grid Grid.Column="1" VerticalAlignment="Stretch">
-                <StackPanel Orientation="Horizontal" Height="64" VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                     <RadioButton Style="{StaticResource MaterialDesignTabRadioButton}" x:Name="jsonradiobtn"  Margin="4" IsChecked="True" Content="Json" Checked="Radiobtn_Checked"/>
                     <RadioButton Style="{StaticResource MaterialDesignTabRadioButton}" x:Name="templateradiobtn" Margin="4" IsChecked="False" Content="Template" Checked="Radiobtn_Checked"/>
                 </StackPanel>
-                <Grid Margin="0,64,0,0">
-                    <avalonEdit:TextEditor Background="{DynamicResource MaterialDesignPaper}"  x:Name="textview" FontFamily="Consolas" SyntaxHighlighting="Json"  FontSize="12pt" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" ShowLineNumbers="True" VerticalScrollBarVisibility="Auto" WordWrap="True" />
+                <Grid Margin="0,45,0,0">
+                    <avalonEdit:TextEditor Background="{DynamicResource MaterialDesignPaper}"  x:Name="textview" FontFamily="Consolas" SyntaxHighlighting="Json" FontSize="12pt" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" ShowLineNumbers="True" VerticalScrollBarVisibility="Auto" WordWrap="True" />
                 </Grid>
             </Grid>
         </Grid>
+        <Grid>
+            <ProgressBar Style="{StaticResource MaterialDesignLinearProgressBar}" x:Name="progressbar" Margin="10,0,10,0" VerticalAlignment="Bottom" Value="90"/>
+        </Grid>
     </Grid>
 </Window>
+
+    
+    

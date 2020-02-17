@@ -14,6 +14,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
+using System.Security.Cryptography;
 
 namespace Excel2
 {
@@ -31,6 +32,8 @@ namespace Excel2
         private TextBox mJsonPath_TextBox;
         private TextBox mDotTemplateFilePath_TextBox;
         private TextBox mSignsheet_Textbox;
+        private TextBox mEncryptionKey_Textbox;
+        private TextBox mEncryptionIV_Textbox;
 
         private RadioButton mDotcs_RadioBtn;
         private RadioButton mDotts_RadioBtn;
@@ -199,8 +202,10 @@ namespace Excel2
             mJsonPath_TextBox = mMainGrid.FindName("jsonpath_textbox") as TextBox;
             mDotTemplateFilePath_TextBox = mMainGrid.FindName("templatefilepath_textbox") as TextBox;
             mSignsheet_Textbox = mMainGrid.FindName("signsheet_textbox") as TextBox;
+            mEncryptionKey_Textbox = mMainGrid.FindName("encryptionkey_textbox") as TextBox;
+            mEncryptionIV_Textbox = mMainGrid.FindName("encryptioniv_textbox") as TextBox;
 
-            mMutilsheet_Checkbox = mMainGrid.FindName("mutilsheet_ToggleBtn") as ToggleButton;
+            mMutilsheet_Checkbox = mMainGrid.FindName("mutilsheet_togglebtn") as ToggleButton;
 
             mTextView = mMainGrid.FindName("textview") as TextEditor;
             //mDotTemplate_TextBox = mMainGrid.FindName("dotcsfiletabitem") as TextEditor;
@@ -238,6 +243,9 @@ namespace Excel2
             mMutilsheet_Checkbox.IsChecked = MultiSheet;
             mSignsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
 
+            mEncryptionKey_Textbox.Text = "";
+            mEncryptionIV_Textbox.Text = "";
+
             mDotcs_RadioBtn.IsChecked = CSRadioBtnChecked;
             mDotts_RadioBtn.IsChecked = TSRadioBtnChecked;
 
@@ -246,6 +254,9 @@ namespace Excel2
             mTextView.SyntaxHighlighting = JsonHighlighting;
 
             SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
+
+            SetEncryptionUI(false);
+            (mMainGrid.FindName("mutilsheet_label") as Label).IsEnabled = MultiSheet;
         }
 
         private void Button_ClickAsync(object sender, RoutedEventArgs e)
@@ -305,32 +316,75 @@ namespace Excel2
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ToggleButton cb = sender as ToggleButton;
-            MultiSheet = (bool)cb.IsChecked;
-            Properties.Settings.Default.MultiSheet = MultiSheet;
-            mSignsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
+            switch (cb.Name)
+            {
+                case "encryption_togglebtn":
+                    bool isChecked = (bool)cb.IsChecked;
+                    mDataManages.CanEncryption = isChecked;
+                    SetEncryptionUI(isChecked);
+                    break;
+                case "mutilsheet_togglebtn":
+                    MultiSheet = (bool)cb.IsChecked;
+                    Properties.Settings.Default.MultiSheet = MultiSheet;
+                    mSignsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
+                    Label mutilsheetLabel = mMainGrid.FindName("mutilsheet_label") as Label;
+                    mutilsheetLabel.IsEnabled = MultiSheet;
+                    ShowFileList();
+                    break;
+            }
+        }
 
-            ShowFileList();
+        private void SetEncryptionUI(bool _isChecked)
+        {
+            ToggleButton encryptionBtn = mMainGrid.FindName("encryption_togglebtn") as ToggleButton;
+            Label encryptionLabel = mMainGrid.FindName("encryption_label") as Label;
+
+            ComboBox encryptionMode_ComboBox = mMainGrid.FindName("encryption_mode_combobox") as ComboBox;
+            ComboBox encryptionPadding_ComboBox = mMainGrid.FindName("encryption_padding_combobox") as ComboBox;
+            Label encryptionMode_Label = mMainGrid.FindName("encryption_mode_label") as Label;
+            Label encryptionPadding_Label = mMainGrid.FindName("encryption_padding_label") as Label;
+
+            encryptionBtn.IsChecked = _isChecked;
+            encryptionLabel.IsEnabled = _isChecked;
+            encryptionMode_Label.IsEnabled = _isChecked;
+            encryptionPadding_Label.IsEnabled = _isChecked;
+            encryptionMode_ComboBox.IsEnabled = _isChecked;
+            encryptionPadding_ComboBox.IsEnabled = _isChecked;
+            mEncryptionKey_Textbox.IsEnabled = _isChecked;
+            mEncryptionIV_Textbox.IsEnabled = _isChecked;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            HeadNum = cb.SelectedIndex + 1;
-            if (Properties.Settings.Default.HeadNum != HeadNum)
-                ShowFileList();
 
-            if (HeadNum > 1)
+            switch (cb.Name)
             {
-                mDotcs_RadioBtn.Visibility = Visibility.Visible;
-                mDotts_RadioBtn.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                mDotcs_RadioBtn.Visibility = Visibility.Hidden;
-                mDotts_RadioBtn.Visibility = Visibility.Hidden;
-            }
+                case "filternum_combobox":
+                    HeadNum = cb.SelectedIndex + 1;
+                    if (Properties.Settings.Default.HeadNum != HeadNum)
+                        ShowFileList();
 
-            Properties.Settings.Default.HeadNum = HeadNum;
+                    if (HeadNum > 1)
+                    {
+                        mDotcs_RadioBtn.Visibility = Visibility.Visible;
+                        mDotts_RadioBtn.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        mDotcs_RadioBtn.Visibility = Visibility.Hidden;
+                        mDotts_RadioBtn.Visibility = Visibility.Hidden;
+                    }
+
+                    Properties.Settings.Default.HeadNum = HeadNum;
+                    break;
+                case "encryption_mode_combobox":
+                    mDataManages.Mode = (CipherMode)Enum.Parse(typeof(CipherMode), cb.SelectedIndex + 1 + "");
+                    break;
+                case "encryption_padding_combobox":
+                    mDataManages.Padding = (PaddingMode)Enum.Parse(typeof(PaddingMode), cb.SelectedIndex + 1 + "");
+                    break;
+            }
         }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -358,11 +412,13 @@ namespace Excel2
                     SheetSign = tb.Text;
                     ShowFileList();
                     break;
+                case "encryptionkey_textbox":
+                    mDataManages.Key = tb.Text;
+                    break;
+                case "encryptioniv_textbox":
+                    mDataManages.IV = tb.Text;
+                    break;
             }
-
-            //Trace.WriteLine(ExcelPath);
-            //Trace.WriteLine(JsonPath);
-            //Trace.WriteLine(TemplatePath);
         }
 
         private void Textbox_DragEnter(object sender, DragEventArgs e)
@@ -508,7 +564,7 @@ namespace Excel2
                 Properties.Settings.Default.Color = name;
             SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
         }
-        
+
         // =======================================
 
         private void BgworkChange(object sender, ProgressChangedEventArgs e)
