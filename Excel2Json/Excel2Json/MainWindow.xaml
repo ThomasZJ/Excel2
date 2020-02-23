@@ -165,20 +165,20 @@
 
                         <Label x:Name="encryption_mode_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" Margin="0,0,75,120" Content="Mode" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="34" />
                         <ComboBox x:Name="encryption_mode_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,75,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60">
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="CBC" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="ECB" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="OFB" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="CFB" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="CTS" Width="50" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="CBC" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="ECB" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="OFB" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="CFB" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="CTS" Width="auto" />
                         </ComboBox>
 
                         <Label x:Name="encryption_padding_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" Margin="0,0,10,120" Content="Padding" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="44" />
                         <ComboBox x:Name="encryption_padding_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,10,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60">
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="None" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="PKCS7" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="Zeros" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="ANSIX923" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="ISO10126" Width="50" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="None" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="PKCS7" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="Zeros" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="ANSIX923" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="ISO10126" Width="auto" />
                         </ComboBox>
                         <TextBox x:Name="encryptionkey_textbox" materialDesign:HintAssist.Hint="Key of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,50" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1"/>
                         <TextBox x:Name="encryptioniv_textbox" materialDesign:HintAssist.Hint="IV of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,10" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1"/>

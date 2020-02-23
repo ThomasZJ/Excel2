@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Excel2
 {
@@ -31,4 +32,15 @@ namespace Excel2
         }
     }
 
+    public class ComboxEncryptionMode
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+
+        public ComboxEncryptionMode(int _id, string _name)
+        {
+            ID = _id;
+            Name = _name;
+        }
+    }
 }
