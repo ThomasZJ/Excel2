@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -721,6 +721,10 @@ namespace Excel2
                 case "Indigo":
                     primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Indigo];
                     accentColor = SwatchHelper.Lookup[MaterialDesignColor.Indigo];
+                    break;
+                case "LightGreen":
+                    primaryColor = SwatchHelper.Lookup[MaterialDesignColor.LightGreen];
+                    accentColor = SwatchHelper.Lookup[MaterialDesignColor.LightGreen];
                     break;
                 case "Blue":
                     primaryColor = SwatchHelper.Lookup[MaterialDesignColor.Blue];

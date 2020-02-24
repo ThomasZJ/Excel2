@@ -11,6 +11,11 @@ namespace Excel2
         MAX
     }
 
+    public enum EncryptionMode
+    {
+        CBC, ECB, OFB, CFB
+    }
+
     class DataRes
     {
     }
@@ -34,13 +39,12 @@ namespace Excel2
 
     public class ComboxEncryptionMode
     {
-        public int ID { get; set; }
         public string Name { get; set; }
-
-        public ComboxEncryptionMode(int _id, string _name)
+        public string Value { get; set; }
+        public ComboxEncryptionMode(string _name, string _value)
         {
-            ID = _id;
             Name = _name;
+            Value = _value;
         }
     }
 }

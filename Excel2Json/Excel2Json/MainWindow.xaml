@@ -144,9 +144,9 @@
                     <Grid Grid.Column="1">
                         <Label Style="{StaticResource MaterialDesignLabel}" FontSize="10"  Content="Head" Margin="10,0,0,120" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="31"/>
                         <ComboBox x:Name="filternum_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="10,0,0,88" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Left" Width="60" >
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="1" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="2" Width="50" />
-                            <Label Style="{StaticResource MaterialDesignLabel}" Content="3" Width="50" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="1" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="2" Width="auto" />
+                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="3" Width="auto" />
                         </ComboBox>
 
                         <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="dotcs_radiobtn" Content=".cs" Margin="10,0,0,56" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked"  VerticalAlignment="Bottom"/>
