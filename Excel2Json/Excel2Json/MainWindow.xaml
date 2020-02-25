@@ -136,7 +136,7 @@
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" Margin="0,0,10,0">
-                        <ToggleButton x:Name="mutilsheet_togglebtn" Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Multi Sheet" HorizontalAlignment="Left" Margin="34,0,0,98" VerticalAlignment="Bottom" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked"/>
+                        <ToggleButton x:Name="mutilsheet_togglebtn" Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Multi Sheet" HorizontalAlignment="Left" Margin="34,0,0,98" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" />
                         <Label x:Name="mutilsheet_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="Multi Sheet" VerticalAlignment="Bottom" />
 
                         <TextBox materialDesign:HintAssist.Hint="Tags" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="signsheet_textbox" HorizontalAlignment="Left" Margin="73,0,0,99" Width="120" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom"/>
