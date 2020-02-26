@@ -15,6 +15,8 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using System.Security.Cryptography;
+using System.Windows.Documents;
+using System.Collections.Generic;
 
 namespace Excel2
 {
@@ -83,26 +85,6 @@ namespace Excel2
         /// </summary>
         private TemplateType Type { get; set; }
 
-        /// <summary>
-        /// excel文件路径 
-        /// </summary>
-        private string ExcelPath { get; set; } = "";
-
-        /// <summary>
-        /// 导出json路径
-        /// </summary>
-        private string JsonPath { get; set; } = "";
-
-        /// <summary>
-        /// Template Classes path
-        /// </summary>
-        private string TemplatePath { get; set; } = "";
-
-        /// <summary>
-        /// Filter key word for sheet
-        /// </summary>
-        public string SheetSign { private set; get; }
-
         private string JsonData { get; set; }
 
         private string TemplateData { get; set; }
@@ -118,6 +100,13 @@ namespace Excel2
         private readonly IHighlightingDefinition JsonHighlighting;
         private readonly IHighlightingDefinition CSHighlighting;
         private readonly IHighlightingDefinition TSHighlighting;
+
+        private TextBoxData ExcelPath;
+        private TextBoxData JsonPath;
+        private TextBoxData TemplatePath;
+        private TextBoxData SheetSign;
+        private TextBoxData EncryptionKey;
+        private TextBoxData EncryptionIV;
 
         public MainWindow()
         {
@@ -140,9 +129,16 @@ namespace Excel2
 
             ListViweItemData = new ObservableCollection<ListViewItemData>();
 
-            ExcelPath = Properties.Settings.Default.ExcelPath;
-            JsonPath = Properties.Settings.Default.JsonPath;
-            TemplatePath = Properties.Settings.Default.TemplatePath;
+            ExcelPath = new TextBoxData();
+            JsonPath = new TextBoxData();
+            TemplatePath = new TextBoxData();
+            SheetSign = new TextBoxData();
+            EncryptionKey = new TextBoxData();
+            EncryptionIV = new TextBoxData();
+
+            ExcelPath.Text = Properties.Settings.Default.ExcelPath;
+            JsonPath.Text = Properties.Settings.Default.JsonPath;
+            TemplatePath.Text = Properties.Settings.Default.TemplatePath;
             HeadNum = Properties.Settings.Default.HeadNum;
             MultiSheet = Properties.Settings.Default.MultiSheet;
             CSRadioBtnChecked = Properties.Settings.Default.CSRadioBtnChecked;
@@ -219,20 +215,18 @@ namespace Excel2
             mJsonView_RadioBtn = mMainGrid.FindName("jsonradiobtn") as RadioButton;
             mTemplateView_RadioBtn = mMainGrid.FindName("templateradiobtn") as RadioButton;
 
+            mExcelPath_TextBox.DataContext = ExcelPath;
+            mJsonPath_TextBox.DataContext = JsonPath;
+            mDotTemplateFilePath_TextBox.DataContext = TemplatePath;
+            mSignsheet_Textbox.DataContext = SheetSign;
+            mEncryptionKey_Textbox.DataContext = EncryptionKey;
+            mEncryptionIV_Textbox.DataContext = EncryptionIV;
+
             if (mBegin_btn != null)
             {
                 mBegin_btn.Content = "Begin";
                 mBegin_btn.Click += (s, ee) => Button_ClickAsync(s, ee);
             }
-
-            if (!string.IsNullOrEmpty(ExcelPath))
-                mExcelPath_TextBox.Text = ExcelPath;
-
-            if (!string.IsNullOrEmpty(JsonPath))
-                mJsonPath_TextBox.Text = JsonPath;
-
-            if (!string.IsNullOrEmpty(TemplatePath))
-                mDotTemplateFilePath_TextBox.Text = TemplatePath;
 
             ComboBox cbox = mMainGrid.FindName("filternum_combobox") as ComboBox;
             cbox.SelectedIndex = HeadNum - 1;
@@ -243,8 +237,8 @@ namespace Excel2
             mMutilsheet_Checkbox.IsChecked = MultiSheet;
             mSignsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
 
-            mEncryptionKey_Textbox.Text = "";
-            mEncryptionIV_Textbox.Text = "";
+            EncryptionKey.Text = "";
+            EncryptionIV.Text = "";
 
             mDotcs_RadioBtn.IsChecked = CSRadioBtnChecked;
             mDotts_RadioBtn.IsChecked = TSRadioBtnChecked;
@@ -266,11 +260,11 @@ namespace Excel2
             bool isExistTemplatePath = true;
 
 
-            if (!Directory.Exists(ExcelPath))
+            if (!Directory.Exists(ExcelPath.Text))
                 isExistExclePath = false;
-            if (!Directory.Exists(JsonPath))
+            if (!Directory.Exists(JsonPath.Text))
                 isExistJsonPath = false;
-            if (!Directory.Exists(TemplatePath))
+            if (!Directory.Exists(TemplatePath.Text))
                 isExistTemplatePath = false;
 
             if (!isExistExclePath || !isExistJsonPath)
@@ -304,7 +298,7 @@ namespace Excel2
             //string s = mFolderDialog.FileName;
             //Trace.WriteLine(s);
             if (((Button)sender).Name.Equals("excelpath_btn"))
-                mExcelPath_TextBox.Text = mFolderDialog.FileName;// FolderDialog.SelectedPath.Trim();
+                ExcelPath.Text = mFolderDialog.FileName;// FolderDialog.SelectedPath.Trim();
 
             if (((Button)sender).Name.Equals("jsonpath_btn"))
                 mJsonPath_TextBox.Text = mFolderDialog.FileName; // FolderDialog.SelectedPath.Trim();
@@ -343,6 +337,24 @@ namespace Excel2
             ComboBox encryptionPadding_ComboBox = mMainGrid.FindName("encryption_padding_combobox") as ComboBox;
             Label encryptionMode_Label = mMainGrid.FindName("encryption_mode_label") as Label;
             Label encryptionPadding_Label = mMainGrid.FindName("encryption_padding_label") as Label;
+
+            List<ComboxEncryptionMode> list = new List<ComboxEncryptionMode>();
+            int modeID = 0;
+            foreach (var item in Enum.GetValues(typeof(EncryptionMode)))
+            {
+                modeID++;
+                list.Add(new ComboxEncryptionMode(item.ToString(), modeID.ToString()));
+            }
+            encryptionMode_ComboBox.ItemsSource = list;
+
+            List<ComboxEncryptionPadding> listPadding = new List<ComboxEncryptionPadding>();
+            int paddingID = 0;
+            foreach (var item in Enum.GetValues(typeof(EncryptionPadding)))
+            {
+                paddingID++;
+                listPadding.Add(new ComboxEncryptionPadding(item.ToString(), paddingID.ToString()));
+            }
+            encryptionPadding_ComboBox.ItemsSource = listPadding;
 
             encryptionBtn.IsChecked = _isChecked;
             encryptionLabel.IsEnabled = _isChecked;
@@ -393,29 +405,31 @@ namespace Excel2
             switch (tb.Name)
             {
                 case "exclepath_textbox":
-                    ExcelPath = tb.Text;
-                    if (Directory.Exists(ExcelPath) || string.IsNullOrEmpty(ExcelPath))
+                    ExcelPath.Text = tb.Text;
+                    if (Directory.Exists(ExcelPath.Text) || string.IsNullOrEmpty(ExcelPath.Text))
                     {
-                        Properties.Settings.Default.ExcelPath = ExcelPath;
+                        Properties.Settings.Default.ExcelPath = ExcelPath.Text;
                         ShowFileList();
                     }
                     break;
                 case "jsonpath_textbox":
-                    JsonPath = tb.Text;
-                    if (Directory.Exists(JsonPath) || string.IsNullOrEmpty(JsonPath)) Properties.Settings.Default.JsonPath = JsonPath;
+                    JsonPath.Text = tb.Text;
+                    if (Directory.Exists(JsonPath.Text) || string.IsNullOrEmpty(JsonPath.Text)) Properties.Settings.Default.JsonPath = JsonPath.Text;
                     break;
                 case "templatefilepath_textbox":
-                    TemplatePath = tb.Text;
-                    if (Directory.Exists(TemplatePath) || string.IsNullOrEmpty(TemplatePath)) Properties.Settings.Default.TemplatePath = TemplatePath;
+                    TemplatePath.Text = tb.Text;
+                    if (Directory.Exists(TemplatePath.Text) || string.IsNullOrEmpty(TemplatePath.Text)) Properties.Settings.Default.TemplatePath = TemplatePath.Text;
                     break;
                 case "signsheet_textbox":
-                    SheetSign = tb.Text;
+                    SheetSign.Text = tb.Text;
                     ShowFileList();
                     break;
                 case "encryptionkey_textbox":
+                    EncryptionKey.Text = tb.Text;
                     mDataManages.Key = tb.Text;
                     break;
                 case "encryptioniv_textbox":
+                    EncryptionIV.Text = tb.Text;
                     mDataManages.IV = tb.Text;
                     break;
             }
@@ -436,25 +450,25 @@ namespace Excel2
             switch (tb.Name)
             {
                 case "exclepath_textbox":
-                    ExcelPath = fileName;
-                    if (Directory.Exists(ExcelPath))
+                    ExcelPath.Text = fileName;
+                    if (Directory.Exists(ExcelPath.Text))
                     {
-                        Properties.Settings.Default.ExcelPath = ExcelPath;
+                        Properties.Settings.Default.ExcelPath = ExcelPath.Text;
                         ShowFileList();
                     }
                     break;
                 case "jsonpath_textbox":
-                    JsonPath = fileName;
-                    if (Directory.Exists(JsonPath))
+                    JsonPath.Text = fileName;
+                    if (Directory.Exists(JsonPath.Text))
                     {
-                        Properties.Settings.Default.JsonPath = JsonPath;
+                        Properties.Settings.Default.JsonPath = JsonPath.Text;
                     }
                     break;
                 case "templatefilepath_textbox":
-                    TemplatePath = fileName;
-                    if (Directory.Exists(TemplatePath))
+                    TemplatePath.Text = fileName;
+                    if (Directory.Exists(TemplatePath.Text))
                     {
-                        Properties.Settings.Default.TemplatePath = TemplatePath;
+                        Properties.Settings.Default.TemplatePath = TemplatePath.Text;
                     }
                     break;
             }
@@ -462,11 +476,11 @@ namespace Excel2
 
         private void Textbox_LostFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
         {
-            TextBox cb = sender as TextBox;
-            if (cb.Name.Equals("exclepath_textbox")) ShowFileList();
-            else if (cb.Name.Equals("jsonpath_textbox")) { }
-            else if (cb.Name.Equals("templatefilepath_textbox")) { }
-            else if (cb.Name.Equals("signsheet_textbox")) ShowFileList();
+            //TextBox cb = sender as TextBox;
+            //if (cb.Name.Equals("exclepath_textbox")) ShowFileList();
+            //else if (cb.Name.Equals("jsonpath_textbox")) { }
+            //else if (cb.Name.Equals("templatefilepath_textbox")) { }
+            //else if (cb.Name.Equals("signsheet_textbox")) ShowFileList();
         }
 
         private void ListView_MouseClick(object sender, RoutedEventArgs e)
@@ -584,9 +598,9 @@ namespace Excel2
 
         private void DoWork(object sender, DoWorkEventArgs e)
         {
-            if (Directory.Exists(JsonPath))
+            if (Directory.Exists(JsonPath.Text))
             {
-                mDataManages.SaveFiles(JsonPath, TemplatePath, HeadNum, Type, (d, v) =>
+                mDataManages.SaveFiles(JsonPath.Text, TemplatePath.Text, HeadNum, Type, (d, v) =>
                  {
                      mBgworker.ReportProgress((int)d);
                      FileName = v;
@@ -624,16 +638,16 @@ namespace Excel2
 
         private void DoShowFileList(object sender, DoWorkEventArgs e)
         {
-            if (Directory.Exists(ExcelPath) && mExcelListView != null)
+            if (Directory.Exists(ExcelPath.Text) && mExcelListView != null)
             {
-                DirectoryInfo TheFolder = new DirectoryInfo(ExcelPath);
+                DirectoryInfo TheFolder = new DirectoryInfo(ExcelPath.Text);
                 foreach (var item in TheFolder.GetFiles())
                 {
                     if (item.Extension.Equals(".xlsx") || item.Extension.Equals(".xls"))
                     {
                         mDataManages.ReadExcel(item);
-                        mDataManages.ExportJson(item, HeadNum, MultiSheet, SheetSign);
-                        mDataManages.ExportTemplate(item, HeadNum, MultiSheet, Type, SheetSign);
+                        mDataManages.ExportJson(item, HeadNum, MultiSheet, SheetSign.Text);
+                        mDataManages.ExportTemplate(item, HeadNum, MultiSheet, Type, SheetSign.Text);
                     }
                 }
             }
@@ -650,9 +664,9 @@ namespace Excel2
             mTemplateView_RadioBtn.IsChecked = TemplateRadioBtnChecked;
             //this.Width = this.MinWidth;
 
-            if (Directory.Exists(ExcelPath) && mExcelListView != null)
+            if (Directory.Exists(ExcelPath.Text) && mExcelListView != null)
             {
-                DirectoryInfo TheFolder = new DirectoryInfo(ExcelPath);
+                DirectoryInfo TheFolder = new DirectoryInfo(ExcelPath.Text);
                 int idx = 0;
                 foreach (var item in TheFolder.GetFiles())
                 {

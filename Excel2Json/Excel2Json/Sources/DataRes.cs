@@ -1,19 +1,23 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 
 namespace Excel2
 {
     public enum TemplateType
     {
-        MIN = 0,
-        CS,
-        TS,
-        MAX
+        MIN, CS, TS,
     }
 
     public enum EncryptionMode
     {
         CBC, ECB, OFB, CFB
+    }
+
+    public enum EncryptionPadding
+    {
+        None, PKCS7, Zeros, ANSIX923, ISO10126
     }
 
     class DataRes
@@ -46,5 +50,36 @@ namespace Excel2
             Name = _name;
             Value = _value;
         }
+    }
+
+    public class ComboxEncryptionPadding
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public ComboxEncryptionPadding(string _name, string _value)
+        {
+            Name = _name;
+            Value = _value;
+        }
+    }
+
+    public class TextBoxData : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string mText;
+        public string Text
+        {
+            get
+            {
+                return mText;
+            }
+            set
+            {
+                mText = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Text"));
+            }
+        }
+
     }
 }

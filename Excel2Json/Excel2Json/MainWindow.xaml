@@ -110,9 +110,9 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" VerticalAlignment="Top">
-                    <TextBox materialDesign:HintAssist.Hint="Excel files path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="exclepath_textbox" Margin="10,0,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop"/>
-                    <TextBox materialDesign:HintAssist.Hint="json path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="jsonpath_textbox" Margin="10,40,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop"/>
-                    <TextBox materialDesign:HintAssist.Hint="Template Classes files path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="templatefilepath_textbox" Margin="10,80,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop"/>
+                    <TextBox materialDesign:HintAssist.Hint="Excel files path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="exclepath_textbox" Margin="10,0,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}"/>
+                    <TextBox materialDesign:HintAssist.Hint="json path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="jsonpath_textbox" Margin="10,40,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}"/>
+                    <TextBox materialDesign:HintAssist.Hint="Template Classes files path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="templatefilepath_textbox" Margin="10,80,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}"/>
 
                     <Button x:Name="excelpath_btn" Content="..." Margin="0,5,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
                     <Button x:Name="jsonpath_btn" Content="..." Margin="0,45,10,0" VerticalAlignment="Top"  Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
@@ -139,11 +139,11 @@
                         <ToggleButton x:Name="mutilsheet_togglebtn" Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Multi Sheet" HorizontalAlignment="Left" Margin="34,0,0,98" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" />
                         <Label x:Name="mutilsheet_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="Multi Sheet" VerticalAlignment="Bottom" />
 
-                        <TextBox materialDesign:HintAssist.Hint="Tags" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="signsheet_textbox" HorizontalAlignment="Left" Margin="73,0,0,99" Width="120" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom"/>
+                        <TextBox materialDesign:HintAssist.Hint="Tags" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="signsheet_textbox" HorizontalAlignment="Left" Margin="73,0,0,99" Width="120" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" Text="{Binding Text}"/>
                     </Grid>
                     <Grid Grid.Column="1">
                         <Label Style="{StaticResource MaterialDesignLabel}" FontSize="10"  Content="Head" Margin="10,0,0,120" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="31"/>
-                        <ComboBox x:Name="filternum_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="10,0,0,88" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Left" Width="60" >
+                        <ComboBox x:Name="filternum_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="10,0,0,88" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Left" Width="60">
                             <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="1" Width="auto" />
                             <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="2" Width="auto" />
                             <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="3" Width="auto" />
@@ -164,24 +164,13 @@
                         <ToggleButton x:Name="encryption_togglebtn" Style="{StaticResource MaterialDesignSwitchToggleButton}" ToolTip="Encryption" HorizontalAlignment="Left" Margin="10,0,0,98" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" />
 
                         <Label x:Name="encryption_mode_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" Margin="0,0,75,120" Content="Mode" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="34" />
-                        <ComboBox x:Name="encryption_mode_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,75,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60">
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="CBC" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="ECB" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="OFB" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="CFB" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="CTS" Width="auto" />
-                        </ComboBox>
+                        <ComboBox x:Name="encryption_mode_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,75,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60" ItemsSource="{Binding ComboxEncryptionMode}" DisplayMemberPath="Name" SelectedValuePath="Value"/>
 
                         <Label x:Name="encryption_padding_label" Style="{StaticResource MaterialDesignLabel}" FontSize="10" Margin="0,0,10,120" Content="Padding" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="44" />
-                        <ComboBox x:Name="encryption_padding_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,10,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60">
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="None" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="PKCS7" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="Zeros" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="ANSIX923" Width="auto" />
-                            <ComboBoxItem Style="{StaticResource MaterialDesignComboBoxItemStyle}" Content="ISO10126" Width="auto" />
-                        </ComboBox>
-                        <TextBox x:Name="encryptionkey_textbox" materialDesign:HintAssist.Hint="Key of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,50" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1"/>
-                        <TextBox x:Name="encryptioniv_textbox" materialDesign:HintAssist.Hint="IV of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,10" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1"/>
+                        <ComboBox x:Name="encryption_padding_combobox" Style="{StaticResource MaterialDesignComboBox}" Margin="0,0,10,92" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60" ItemsSource="{Binding ComboxEncryptionPadding}" DisplayMemberPath="Name" SelectedValuePath="Value"/>
+
+                        <TextBox x:Name="encryptionkey_textbox" materialDesign:HintAssist.Hint="Key of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,50" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1" Text="{Binding Text}"/>
+                        <TextBox x:Name="encryptioniv_textbox" materialDesign:HintAssist.Hint="IV of the encryption" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="10,0,10,10" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1" Text="{Binding Text}"/>
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Bottom">
