@@ -303,41 +303,36 @@ namespace Excel2
                 }
                 else if (firstDataRow > 1)
                 {
-                    if (value.GetType() == typeof(string))
-                        value = value.ToString();
-                    else
+                    try
                     {
-                        try
+                        //Trace.WriteLine("-----> " + _dt.Rows[1][column] + " <------");
+                        switch (_dt.Rows[1][column])
                         {
-                            //Trace.WriteLine("-----> " + _dt.Rows[1][column] + " <------");
-                            switch (_dt.Rows[1][column])
-                            {
-                                case "int":
-                                    if (value.GetType() == typeof(double))
-                                    { // 去掉数值字段的“.0”
-                                        double num = (double)value;
-                                        if ((int)num == num)
-                                            value = (int)num;
-                                    }
-                                    else
-                                        value = int.Parse(value.ToString());
-                                    break;
-                                case "float":
-                                    value = float.Parse(value.ToString());
-                                    break;
-                                case "double":
-                                    value = double.Parse(value.ToString());
-                                    break;
-                                default:
-                                    value = value.ToString();
-                                    break;
-                            }
+                            case "int":
+                                if (value.GetType() == typeof(double))
+                                { // 去掉数值字段的“.0”
+                                    double num = (double)value;
+                                    if ((int)num == num)
+                                        value = (int)num;
+                                }
+                                else
+                                    value = int.Parse(value.ToString());
+                                break;
+                            case "float":
+                                value = float.Parse(value.ToString());
+                                break;
+                            case "double":
+                                value = double.Parse(value.ToString());
+                                break;
+                            default:
+                                value = value.ToString();
+                                break;
                         }
-                        catch (FormatException)
-                        {
-                            // throw new FormatException("has not correct format");
-                            value = value.ToString();
-                        }
+                    }
+                    catch (FormatException)
+                    {
+                        // throw new FormatException("has not correct format");
+                        value = value.ToString();
                     }
                 }
                 // 表头自动转换成小写
