@@ -527,6 +527,29 @@ namespace Excel2
             //mDotTemplate_TextBox.Text = template;
         }
 
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(mExcelListView.SelectedItem is ListViewItemData obj)) return;
+            //this.Width = 1220;
+            string name = obj.FileInfo.Name.Split('.')[0];
+            string json = "";
+            string template = "";
+            if (!MultiSheet)
+            { 
+                mDataManages.SaveFile(JsonPath.Text, TemplatePath.Text, HeadNum, Type, name, null);
+            }
+            else
+            {
+                foreach (var item in mDataManages.JsonData)
+                {
+                    if (item.Key.Contains(name) && item.Value != null)
+                    {
+                        mDataManages.SaveFile(JsonPath.Text, TemplatePath.Text, HeadNum, Type, item.Key, null);
+                    }
+                }
+            }
+        }
+
         private void Radiobtn_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton rb = sender as RadioButton;

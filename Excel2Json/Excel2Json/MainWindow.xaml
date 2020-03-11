@@ -120,13 +120,22 @@
 
                 </Grid>
                 <Grid Grid.Row="1" VerticalAlignment="Top" Margin="0,20,0,20">
-                    <ListView x:Name="excelfile_listview" Margin="10,0,10,0" MouseLeftButtonUp="ListView_MouseClick" Cursor="Hand">
+                    <ListView x:Name="excelfile_listview" Margin="10,0,10,0" MouseLeftButtonUp="ListView_MouseClick" Cursor="Hand" Style="{StaticResource MaterialDesignListView}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}"/>
                                 <GridViewColumn Header="FileName" DisplayMemberBinding="{Binding FileName}"/>
                             </GridView>
                         </ListView.View>
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="export it" Click="MenuItem_Click">
+                                    <!--<MenuItem.Icon>
+                                        <Image Source="{StaticResource}" Width="20" Height="20"  />
+                                    </MenuItem.Icon>-->
+                                </MenuItem>
+                            </ContextMenu>
+                            </ListView.ContextMenu>
                     </ListView>
                 </Grid>
                 <Grid Grid.Row="2" VerticalAlignment="Bottom">
@@ -174,7 +183,7 @@
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Bottom">
-                    <Button x:Name="begin_btn" Content="Begin" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="28" VerticalContentAlignment="Bottom" Margin="70,0,70,10" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
+                    <Button x:Name="begin_btn" Content="Begin" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Margin="70,0,70,10" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="5" />
                 </Grid>
             </Grid>
             <Grid Grid.Column="1" VerticalAlignment="Stretch">
