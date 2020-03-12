@@ -13,16 +13,16 @@
             <materialDesign:ColorZone Mode="PrimaryDark" Padding="11">
                 <DockPanel>
                     <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges">
-                        <ListBox >
+                        <ListBox Style="{StaticResource MaterialDesignListBox}">
                             <ListBoxItem x:Name="Light" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
                                 Light
                             </ListBoxItem>
                             <ListBoxItem x:Name="Dark" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
                                 Dark
                             </ListBoxItem>
-                            <ListBoxItem Style="{StaticResource MaterialDesignListBoxItem}">
-
-                            </ListBoxItem>
+                            ------------------
+                            <!--<ListBoxItem Style="{StaticResource MaterialDesignListBoxItem}">
+                            </ListBoxItem>-->
                             <ListBoxItem x:Name="Yellow" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
                                 Yellow
                             </ListBoxItem>
@@ -129,10 +129,11 @@
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="export it" Click="MenuItem_Click">
-                                    <!--<MenuItem.Icon>
-                                        <Image Source="{StaticResource}" Width="20" Height="20"  />
-                                    </MenuItem.Icon>-->
+                                <MenuItem Style="{StaticResource MaterialDesignMenuItem}" Header="Export" Click="MenuItem_RightClick">
+                                    <MenuItem.Icon>
+                                        <materialDesign:PackIcon Kind="FileDownloadOutline" Width="auto" Height="auto" />
+                                        <!--<Image Source="" Width="20" Height="20"  />-->
+                                    </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
                             </ListView.ContextMenu>
