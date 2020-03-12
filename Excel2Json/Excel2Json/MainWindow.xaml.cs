@@ -527,13 +527,11 @@ namespace Excel2
             //mDotTemplate_TextBox.Text = template;
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_RightClick(object sender, RoutedEventArgs e)
         {
             if (!(mExcelListView.SelectedItem is ListViewItemData obj)) return;
             //this.Width = 1220;
             string name = obj.FileInfo.Name.Split('.')[0];
-            string json = "";
-            string template = "";
             if (!MultiSheet)
             { 
                 mDataManages.SaveFile(JsonPath.Text, TemplatePath.Text, HeadNum, Type, name, null);
