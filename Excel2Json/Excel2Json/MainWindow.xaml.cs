@@ -251,6 +251,15 @@ namespace Excel2
 
             SetEncryptionUI(false);
             (mMainGrid.FindName("mutilsheet_label") as Label).IsEnabled = MultiSheet;
+
+
+            List<ThemesListBoxItem> list = new List<ThemesListBoxItem>();
+            ThemesListbox.ItemsSource = list;
+
+            foreach (var item in Enum.GetValues(typeof(Themes)))
+            {
+                list.Add(new ThemesListBoxItem(item.ToString()));
+            };
         }
 
         private void Button_ClickAsync(object sender, RoutedEventArgs e)
@@ -533,7 +542,7 @@ namespace Excel2
             //this.Width = 1220;
             string name = obj.FileInfo.Name.Split('.')[0];
             if (!MultiSheet)
-            { 
+            {
                 mDataManages.SaveFile(JsonPath.Text, TemplatePath.Text, HeadNum, Type, name, null);
             }
             else
@@ -590,13 +599,14 @@ namespace Excel2
             ShowFileList();
         }
 
-        private void ListBoxItem_MouseClick(object sender, RoutedEventArgs e)
+        private void ListBoxItem_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            string name = (sender as ListBoxItem).Name;
-            if (name.Equals("Light") || name.Equals("Dark"))
-                Properties.Settings.Default.Theme = name;
+            object ob = (sender as ListBox).SelectedItem;
+            ThemesListBoxItem item = ob as ThemesListBoxItem;
+            if (item.Name.Equals("Light") || item.Name.Equals("Dark"))
+                Properties.Settings.Default.Theme = item.Name;
             else
-                Properties.Settings.Default.Color = name;
+                Properties.Settings.Default.Color = item.Name;
             SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
         }
 

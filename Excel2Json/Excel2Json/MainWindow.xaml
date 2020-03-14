@@ -13,73 +13,14 @@
             <materialDesign:ColorZone Mode="PrimaryDark" Padding="11">
                 <DockPanel>
                     <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges">
-                        <ListBox Style="{StaticResource MaterialDesignListBox}">
-                            <ListBoxItem x:Name="Light" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Light
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Dark" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Dark
-                            </ListBoxItem>
-                            ------------------
-                            <!--<ListBoxItem Style="{StaticResource MaterialDesignListBoxItem}">
-                            </ListBoxItem>-->
-                            <ListBoxItem x:Name="Yellow" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Yellow
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Amber" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Amber
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="DeepOrange" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                DeepOrange
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Lightblue" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Lightblue
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Teal" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Teal
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Cyan" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Cyan
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Pink" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Pink
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Green" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Green
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="DeepPurple" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                DeepPurple
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Indigo" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Indigo
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="LightGreen" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                LightGreen
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Blue" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Blue
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Lime" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Lime
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Red" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Red
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Orange" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Orange
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Purple" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Purple
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="BlueGrey" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                BlueGrey
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Grey" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Grey
-                            </ListBoxItem>
-                            <ListBoxItem x:Name="Brown" MouseLeftButtonUp="ListBoxItem_MouseClick" Style="{StaticResource MaterialDesignListBoxItem}">
-                                Brown
-                            </ListBoxItem>
+                        <ListBox x:Name="ThemesListbox" Style="{StaticResource MaterialDesignListBox}" SelectionChanged="ListBoxItem_SelectionChanged" >
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Width="120">
+                                        <TextBlock Text="{Binding Path=Name}" Margin="10, 0,0,0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </materialDesign:PopupBox>
                     <StackPanel Orientation="Horizontal">
@@ -120,7 +61,7 @@
 
                 </Grid>
                 <Grid Grid.Row="1" VerticalAlignment="Top" Margin="0,20,0,20">
-                    <ListView x:Name="excelfile_listview" Margin="10,0,10,0" MouseLeftButtonUp="ListView_MouseClick" Cursor="Hand" Style="{StaticResource MaterialDesignListView}">
+                    <ListView x:Name="excelfile_listview" Margin="10,0,10,0" Cursor="Hand" MouseLeftButtonUp="ListView_MouseClick" Style="{StaticResource MaterialDesignListView}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}"/>
@@ -136,7 +77,7 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
-                            </ListView.ContextMenu>
+                        </ListView.ContextMenu>
                     </ListView>
                 </Grid>
                 <Grid Grid.Row="2" VerticalAlignment="Bottom">

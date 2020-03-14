@@ -19,6 +19,30 @@ namespace Excel2
     {
         None, PKCS7, Zeros, ANSIX923, ISO10126
     }
+    public enum Themes
+    {
+        Light,
+        Dark,
+        Yellow,
+        Amber,
+        DeepOrange,
+        Lightblue,
+        Teal,
+        Cyan,
+        Pink,
+        Green,
+        DeepPurple,
+        Indigo,
+        LightGreen,
+        Blue,
+        Lime,
+        Red,
+        Orange,
+        Purple,
+        BlueGrey,
+        Grey,
+        Brown
+    }
 
     class DataRes
     {
@@ -81,5 +105,14 @@ namespace Excel2
             }
         }
 
+    }
+
+    public class ThemesListBoxItem
+    {
+        public string Name { get; set; }
+        public ThemesListBoxItem(string _name)
+        {
+            Name = _name;
+        }
     }
 }
