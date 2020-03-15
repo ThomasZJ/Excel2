@@ -26,7 +26,7 @@ namespace Excel2
         Yellow,
         Amber,
         DeepOrange,
-        Lightblue,
+        LightBlue,
         Teal,
         Cyan,
         Pink,

@@ -285,16 +285,16 @@ namespace Excel2
                             break;
                     }
                     string fileName = templatePath + "\\" + _fileName + suffix;
-                    string jsonData = TemplateData[_fileName];
+                    string templateData = TemplateData[_fileName];
 
-                    if (CanEncryption)
-                        jsonData = DesEncrypt(Key, IV, jsonData, Mode, Padding);
+                    //if (CanEncryption)
+                    //    templateData = DesEncrypt(Key, IV, templateData, Mode, Padding);
 
                     using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                     {
                         using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
                         {
-                            writer.Write(jsonData);
+                            writer.Write(templateData);
                         }
                         file.Close();
                         callback?.Invoke(_fileName + suffix);
