@@ -246,6 +246,63 @@ namespace Excel2
                 }
             }
         }
+
+        public void SaveFile(string _jsonPath, string templatePath, int _headNum, TemplateType _type, string _fileName, Action<string> callback)
+        {
+            if (Directory.Exists(_jsonPath))
+            {
+                if (JsonData.ContainsKey(_fileName))
+                {
+                    string fileName = _jsonPath + "\\" + _fileName + ".json"; ;
+                    string jsonData = JsonData[_fileName];
+                    if (CanEncryption)
+                        jsonData = DesEncrypt(Key, IV, jsonData, Mode, Padding);
+                    using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                    {
+                        using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
+                        {
+                            writer.Write(jsonData);
+                        }
+                        file.Close();
+                        callback?.Invoke(_fileName + ".json");
+                    }
+                }
+            }
+
+            if (Directory.Exists(templatePath) && _headNum > 1 && _type != TemplateType.MIN)
+            {
+                if (TemplateData.ContainsKey(_fileName)) { 
+                    string suffix = "";
+                    switch (_type)
+                    {
+                        case TemplateType.CS:
+                            suffix = ".cs";
+                            break;
+                        case TemplateType.TS:
+                            suffix = ".ts";
+                            break;
+                        default:
+                            break;
+                    }
+                    string fileName = templatePath + "\\" + _fileName + suffix;
+                    string jsonData = TemplateData[_fileName];
+
+                    if (CanEncryption)
+                        jsonData = DesEncrypt(Key, IV, jsonData, Mode, Padding);
+
+                    using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                    {
+                        using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
+                        {
+                            writer.Write(jsonData);
+                        }
+                        file.Close();
+                        callback?.Invoke(_fileName + suffix);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Change the excel data to array
         /// </summary>
@@ -305,7 +362,6 @@ namespace Excel2
                 {
                     try
                     {
-                        //Trace.WriteLine("-----> " + _dt.Rows[1][column] + " <------");
                         switch (_dt.Rows[1][column])
                         {
                             case "int":
