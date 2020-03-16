@@ -1,6 +1,6 @@
 # Thanks
 
-[neil3d](https://github.com/neil3d/excel2json)
+[@neil3d](https://github.com/neil3d/)
 
 # Excel to json
 
