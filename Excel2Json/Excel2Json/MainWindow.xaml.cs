@@ -257,13 +257,13 @@ namespace Excel2
             }
             //string s = mFolderDialog.FileName;
             //Trace.WriteLine(s);
-            if (((Button)sender).Name.Equals("excelpath_btn"))
+            if (((Button)sender).Equals(ExcelPathBtn))
                 ExcelPath.Text = mFolderDialog.FileName;// FolderDialog.SelectedPath.Trim();
 
-            if (((Button)sender).Name.Equals("jsonpath_btn"))
+            if (((Button)sender).Equals(JsonPathBtn))
                 JsonPath_TextBox.Text = mFolderDialog.FileName; // FolderDialog.SelectedPath.Trim();
 
-            if (((Button)sender).Name.Equals("templatefilepath_btn"))
+            if (((Button)sender).Equals(DotTemplateFilePathBtn))
                 DotTemplateFilePath_TextBox.Text = mFolderDialog.FileName; // FolderDialog.SelectedPath.Trim();
         }
 
