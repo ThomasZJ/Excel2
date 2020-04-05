@@ -271,7 +271,8 @@ namespace Excel2
 
             if (Directory.Exists(templatePath) && _headNum > 1 && _type != TemplateType.MIN)
             {
-                if (TemplateData.ContainsKey(_fileName)) { 
+                if (TemplateData.ContainsKey(_fileName))
+                {
                     string suffix = "";
                     switch (_type)
                     {

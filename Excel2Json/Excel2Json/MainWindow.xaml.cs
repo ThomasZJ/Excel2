@@ -45,12 +45,12 @@ namespace Excel2
         private bool MultiSheet { get; set; }
 
         /// <summary>
-        /// CSRadioBtn is Checked 
+        /// CSRadioBtn is Checked
         /// </summary>
         private bool CSRadioBtnChecked { get; set; }
 
         /// <summary>
-        /// CSRadioBtn is Checked 
+        /// CSRadioBtn is Checked
         /// </summary>
         private bool TSRadioBtnChecked { get; set; }
 
@@ -265,6 +265,11 @@ namespace Excel2
 
             if (((Button)sender).Equals(DotTemplateFilePathBtn))
                 DotTemplateFilePath_TextBox.Text = mFolderDialog.FileName; // FolderDialog.SelectedPath.Trim();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            ShowFileList();
         }
 
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -662,6 +667,5 @@ namespace Excel2
                     break;
             }
         }
-
     }
 }
