@@ -267,6 +267,11 @@ namespace Excel2
                 DotTemplateFilePath_TextBox.Text = mFolderDialog.FileName; // FolderDialog.SelectedPath.Trim();
         }
 
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            ShowFileList();
+        }
+
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ToggleButton cb = sender as ToggleButton;
@@ -662,6 +667,5 @@ namespace Excel2
                     break;
             }
         }
-
     }
 }
