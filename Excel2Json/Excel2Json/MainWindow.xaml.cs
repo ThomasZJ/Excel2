@@ -17,6 +17,7 @@ using MaterialDesignThemes.Wpf;
 using System.Security.Cryptography;
 using System.Windows.Documents;
 using System.Collections.Generic;
+using System.Windows.Data;
 
 namespace Excel2
 {
@@ -167,6 +168,8 @@ namespace Excel2
             mMainGrid = sender as Grid;
 
             ExcelListView.ItemsSource = ListViweItemData;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ExcelListView.ItemsSource);
+            view.Filter = UserFilter;
 
             ExcelPath_TextBox.DataContext = ExcelPath;
             JsonPath_TextBox.DataContext = JsonPath;
@@ -359,8 +362,14 @@ namespace Excel2
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             TextBox tb = sender as TextBox;
-            UpdateText(tb, tb.Text);
+            if (tb.Name.Equals("FilterList_TextBox"))
+            {
+                CollectionViewSource.GetDefaultView(ExcelListView.ItemsSource).Refresh();
+            }
+            else
+                UpdateText(tb, tb.Text);
         }
+
 
         private void Textbox_DragEnter(object sender, DragEventArgs e)
         {
@@ -606,6 +615,7 @@ namespace Excel2
 
             if (ProgressBar != null)
                 ProgressBar.Value = 0;
+
         }
 
         private void SetColor(string _colorName, string _theme)
@@ -667,5 +677,14 @@ namespace Excel2
                     break;
             }
         }
+
+        private bool UserFilter(object item)
+        {
+            if (String.IsNullOrEmpty(FilterList_TextBox.Text))
+                return true;
+            else
+                return ((item as ListViewItemData).FileName.IndexOf(FilterList_TextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
     }
 }

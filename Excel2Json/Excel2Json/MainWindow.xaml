@@ -23,6 +23,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </materialDesign:PopupBox>
+                    <TextBox Margin="0,0,10,0" MinWidth="200" DockPanel.Dock="Right" materialDesign:HintAssist.Hint="Filter in list" Style="{StaticResource MaterialDesignFloatingHintTextBox}" x:Name="FilterList_TextBox" TextChanged="TextBox_TextChanged"></TextBox>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Toolbox" Width="32" Height="32" >
                             <materialDesign:PackIcon.Background>
@@ -58,7 +59,6 @@
                     <Button x:Name="ExcelPathBtn" Content="..." Margin="0,5,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="15" />
                     <Button x:Name="JsonPathBtn" Content="..." Margin="0,45,10,0" VerticalAlignment="Top"  Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="15" />
                     <Button x:Name="DotTemplateFilePathBtn" Content="..." Margin="0,85,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Style="{StaticResource MaterialDesignRaisedDarkButton}" materialDesign:ButtonAssist.CornerRadius="15" />
-
                 </Grid>
                 <Grid Grid.Row="1" VerticalAlignment="Top" Margin="0,20,0,20">
                     <ListView x:Name="ExcelListView" Margin="10,0,10,0" Cursor="Hand" MouseLeftButtonUp="ListView_MouseClick" Style="{StaticResource MaterialDesignListView}">
