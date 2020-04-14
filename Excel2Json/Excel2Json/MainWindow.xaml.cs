@@ -16,13 +16,14 @@ using System.Collections.Generic;
 using System.Windows.Data;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignColors;
+using Panuon.UI.Silver;
 
 namespace Excel2
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : WindowX
     {
         private Grid mMainGrid;
 
@@ -205,13 +206,13 @@ namespace Excel2
             MutilSheet_Label.IsEnabled = MultiSheet;
 
 
-            List<ThemesListBoxItem> list = new List<ThemesListBoxItem>();
-            ThemesListbox.ItemsSource = list;
+            //List<ThemesListBoxItem> list = new List<ThemesListBoxItem>();
+            //ThemesListbox.ItemsSource = list;
 
-            foreach (var item in Enum.GetValues(typeof(Themes)))
-            {
-                list.Add(new ThemesListBoxItem(item.ToString()));
-            };
+            //foreach (var item in Enum.GetValues(typeof(Themes)))
+            //{
+            //    list.Add(new ThemesListBoxItem(item.ToString()));
+            //};
         }
 
         private void Button_ClickAsync(object sender, RoutedEventArgs e)
