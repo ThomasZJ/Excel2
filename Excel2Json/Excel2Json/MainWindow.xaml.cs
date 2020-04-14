@@ -8,16 +8,14 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Xml;
-using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using MaterialDesignColors;
-using MaterialDesignThemes.Wpf;
 using System.Security.Cryptography;
-using System.Windows.Documents;
 using System.Collections.Generic;
 using System.Windows.Data;
+using MaterialDesignThemes.Wpf;
+using MaterialDesignColors;
 
 namespace Excel2
 {
