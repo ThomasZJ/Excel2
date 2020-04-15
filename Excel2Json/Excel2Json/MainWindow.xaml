@@ -13,7 +13,7 @@
             MinWidth="615" Width="1220" MinHeight="405" Height="880"
             WindowStartupLocation="CenterScreen" pu:AnimationHelper.FadeIn="True">
 
-    <Grid Loaded="Grid_Loaded" Background="#383838">
+    <Grid Loaded="Grid_Loaded" Background="#32302F">
         <Grid>
             <DockPanel>
                 <!--<ListBox x:Name="ThemesListbox">
@@ -25,9 +25,9 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>-->
-                <TextBox Margin="0,10,16,0" MinWidth="200" DockPanel.Dock="Right" x:Name="FilterList_TextBox" TextChanged="TextBox_TextChanged"  VerticalAlignment="Top" Height="25" pu:TextBoxHelper.Watermark="Filter" pu:TextBoxHelper.CornerRadius="12" FontSize="12"/>
+                <TextBox Margin="0,10,16,0" MinWidth="200" DockPanel.Dock="Right" x:Name="FilterList_TextBox" TextChanged="TextBox_TextChanged"  VerticalAlignment="Top" Height="25" pu:TextBoxHelper.Watermark="Filter" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#282828" Foreground="#FBF1C7"/>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="32" VerticalAlignment="Top" Margin="16 0 0 0" Text="Excel to . . ."/>
+                    <TextBlock FontSize="32" VerticalAlignment="Top" Margin="16 0 0 0" Text="Excel to . . ." Foreground="#FBF1C7"/>
                 </StackPanel>
             </DockPanel>
         </Grid>
@@ -46,16 +46,16 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" VerticalAlignment="Top">
-                    <TextBox x:Name="ExcelPath_TextBox" Margin="10,0,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" Height="25" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}" pu:TextBoxHelper.Watermark="Excel Path" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#383838" Foreground="#EBDBB2"/>
-                    <TextBox x:Name="JsonPath_TextBox" Margin="10,40,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" Height="25" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}" pu:TextBoxHelper.Watermark="Json Path" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#383838" Foreground="#EBDBB2"/>
-                    <TextBox x:Name="DotTemplateFilePath_TextBox" Margin="10,80,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" Height="25" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}" pu:TextBoxHelper.Watermark="DotTemplateFile Path" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#383838"  Foreground="#EBDBB2"/>
+                    <TextBox x:Name="ExcelPath_TextBox" Margin="10,0,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" Height="25" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}" pu:TextBoxHelper.Watermark="Excel Path" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#282828" Foreground="#FBF1C7"/>
+                    <TextBox x:Name="JsonPath_TextBox" Margin="10,40,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" Height="25" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}" pu:TextBoxHelper.Watermark="Json Path" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#282828" Foreground="#FBF1C7"/>
+                    <TextBox x:Name="DotTemplateFilePath_TextBox" Margin="10,80,60,0" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" Height="25" LostKeyboardFocus="Textbox_LostFocus" PreviewDragOver="Textbox_DragEnter" PreviewDrop="Textbox_DragDrop" Text="{Binding Text}" pu:TextBoxHelper.Watermark="DotTemplateFile Path" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#282828"  Foreground="#FBF1C7"/>
 
-                    <Button x:Name="ExcelPathBtn" Content="..." Margin="0,0,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Height="25" Background="LightPink" Foreground="Black" pu:ButtonHelper.ButtonStyle="Outline" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink"/>
-                    <Button x:Name="JsonPathBtn" Content="..." Margin="0,40,10,0" VerticalAlignment="Top"  Click="Button_Click" HorizontalAlignment="Right" Width="45" Height="25" Background="LightPink" Foreground="Black" pu:ButtonHelper.ButtonStyle="Outline" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink"/>
-                    <Button x:Name="DotTemplateFilePathBtn" Content="..." Margin="0,80,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Height="25" pu:ButtonHelper.ButtonStyle="Outline" Background="LightPink" Foreground="Black" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink"/>
+                    <Button x:Name="ExcelPathBtn" Content="..." Margin="0,0,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Height="25" pu:ButtonHelper.ButtonStyle="Standard" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink"/>
+                    <Button x:Name="JsonPathBtn" Content="..." Margin="0,40,10,0" VerticalAlignment="Top"  Click="Button_Click" HorizontalAlignment="Right" Width="45" Height="25" pu:ButtonHelper.ButtonStyle="Standard" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink"/>
+                    <Button x:Name="DotTemplateFilePathBtn" Content="..." Margin="0,80,10,0" VerticalAlignment="Top" Click="Button_Click" HorizontalAlignment="Right" Width="45" Height="25" pu:ButtonHelper.ButtonStyle="Standard" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink"/>
                 </Grid>
                 <Grid Grid.Row="1" VerticalAlignment="Top" Margin="0,20,0,20">
-                    <ListView x:Name="ExcelListView" Margin="10,0,10,0" Cursor="Hand" MouseLeftButtonUp="ListView_MouseClick" Background="#383838" Foreground="#EBDBB2">
+                    <ListView x:Name="ExcelListView" Margin="10,0,10,0" Cursor="Hand" MouseLeftButtonUp="ListView_MouseClick" Background="#383838" Foreground="#FBF1C7">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}"/>
@@ -64,14 +64,7 @@
                         </ListView.View>
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Export" Click="MenuItem_RightClick"  Background="#383838" Foreground="#EBDBB2">
-                                    <!--<MenuItem.Icon>
-                                        <materialDesign:PackIcon Kind="FileDownloadOutline" Width="auto" Height="auto" />
-                                        -->
-                                    <!--<Image Source="" Width="20" Height="20"  />-->
-                                    <!--
-                                    </MenuItem.Icon>-->
-                                </MenuItem>
+                                <MenuItem Header="Export" Click="MenuItem_RightClick"  Background="#383838" Foreground="#FBF1C7"/>
                             </ContextMenu>
                         </ListView.ContextMenu>
                     </ListView>
@@ -83,61 +76,55 @@
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" Margin="0,0,10,0">
-                        <CheckBox x:Name="Mutilsheet_Checkbox" ToolTip="Multi Sheet" HorizontalAlignment="Left" Margin="18,0,0,96" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" pu:CheckBoxHelper.CheckBoxStyle="Switch"  Background="#383838" Foreground="#EBDBB2"/>
-                        <Label x:Name="MutilSheet_Label" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="Multi Sheet" VerticalAlignment="Bottom" Background="#383838" Foreground="#EBDBB2"/>
+                        <CheckBox x:Name="Mutilsheet_Checkbox" ToolTip="Multi Sheet" HorizontalAlignment="Left" Margin="18,0,0,96" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" pu:CheckBoxHelper.CheckBoxStyle="Switch" Background="#383838" Foreground="#FBF1C7"/>
+                        <Label x:Name="MutilSheet_Label" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="Multi Sheet" VerticalAlignment="Bottom" Foreground="#FBF1C7"/>
 
-                        <TextBox x:Name="Signsheet_Textbox" HorizontalAlignment="Left" Margin="73,0,0,95" Width="120" Height="25" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" Text="{Binding Text}" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#383838" Foreground="#EBDBB2"/>
+                        <TextBox x:Name="Signsheet_Textbox" HorizontalAlignment="Left" Margin="73,0,0,95" Width="120" Height="25" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" Text="{Binding Text}" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#282828" Foreground="#FBF1C7"/>
                     </Grid>
                     <Grid Grid.Column="1">
-                        <Label FontSize="10"  Content="Head" Margin="10,0,0,120" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="31" Background="#383838" Foreground="#EBDBB2"/>
-                        <ComboBox x:Name="FilterNum_ComboBox" Margin="10,0,0,88" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Left" Width="60" Background="#383838" Foreground="#EBDBB2">
+                        <Label FontSize="10"  Content="Head" Margin="10,0,0,120" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="60"  Foreground="#FBF1C7"/>
+                        <ComboBox x:Name="FilterNum_ComboBox" Margin="10,0,0,88" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Left" Width="60" Background="#32302F" Foreground="#FBF1C7" pu:ComboBoxHelper.SelectedBackground="#665C54" pu:ComboBoxHelper.HoverBackground="#504945">
                             <ComboBoxItem Content="1" Width="auto" />
                             <ComboBoxItem Content="2" Width="auto" />
                             <ComboBoxItem Content="3" Width="auto" />
                         </ComboBox>
 
-                        <RadioButton x:Name="Dotcs_RadioBtn" Content=".cs" Margin="10,0,0,56" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked"  VerticalAlignment="Bottom"/>
+                        <RadioButton x:Name="Dotcs_RadioBtn" Content=".cs" Margin="10,0,0,55" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" Background="#383838" Foreground="#FBF1C7" VerticalAlignment="Bottom" pu:RadioButtonHelper.RadioButtonStyle="Switch"  pu:RadioButtonHelper.CheckedContent=".cs" />
 
-                        <RadioButton x:Name="Dotts_RadioBtn" Content=".ts" Margin="10,0,0,33" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>
-
-                        <!--<RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="dotpy_radiobtn" Content=".py" Margin="10,0,0,10" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>
-                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="x3" Content=".cs" Margin="54,0,0,56" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked"  VerticalAlignment="Bottom"/>
-                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="x2" Content=".ts" Margin="54,0,0,33" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>
-                        <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="x1" Content=".py" Margin="54,0,0,10" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" VerticalAlignment="Bottom"/>-->
-
+                        <RadioButton x:Name="Dotts_RadioBtn" Content=".ts" Margin="10,0,0,25" HorizontalAlignment="Left" Checked="Radiobtn_Checked" Unchecked="Radiobtn_Checked" Background="#383838" Foreground="#FBF1C7" VerticalAlignment="Bottom" pu:RadioButtonHelper.RadioButtonStyle="Switch" pu:RadioButtonHelper.CheckedContent=".ts" />
                     </Grid>
                     <Grid Grid.Column="2">
-                        <Label x:Name="Encryption_Label" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="DES Encryption" VerticalAlignment="Bottom" Background="#383838" Foreground="#EBDBB2" />
+                        <Label x:Name="Encryption_Label" FontSize="10" HorizontalAlignment="Left" Margin="10,0,0,120" Content="DES Encryption" VerticalAlignment="Bottom" Foreground="#FBF1C7" />
                         <CheckBox x:Name="Encryption_ToggleBtn" ToolTip="Encryption" HorizontalAlignment="Left" Margin="25,0,0,98" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" VerticalAlignment="Bottom" 
-              pu:CheckBoxHelper.CheckBoxStyle="Switch" Background="#383838" Foreground="#EBDBB2"/>
+              pu:CheckBoxHelper.CheckBoxStyle="Switch" Background="#383838" Foreground="#FBF1C7"/>
 
-                        <Label x:Name="Encryption_Mode_Label" FontSize="10" Margin="0,0,75,120" Content="Mode" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Background="#383838" Foreground="#EBDBB2"/>
-                        <ComboBox x:Name="Encryption_Mode_ComboBox" Margin="0,0,75,100" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60" ItemsSource="{Binding ComboxEncryptionMode}" DisplayMemberPath="Name" SelectedValuePath="Value" Background="#383838" Foreground="#EBDBB2"/>
+                        <Label x:Name="Encryption_Mode_Label" FontSize="10" Margin="0,0,75,120" Content="Mode" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Foreground="#FBF1C7"/>
+                        <ComboBox x:Name="Encryption_Mode_ComboBox" Margin="0,0,75,100" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60" ItemsSource="{Binding ComboxEncryptionMode}" DisplayMemberPath="Name" SelectedValuePath="Value" Background="#383838" Foreground="#FBF1C7" pu:ComboBoxHelper.SelectedBackground="#665C54" pu:ComboBoxHelper.HoverBackground="#504945"/>
 
-                        <Label x:Name="Encryption_Padding_Label" FontSize="10" Margin="0,0,10,120" Content="Padding" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Background="#383838" Foreground="#EBDBB2"/>
-                        <ComboBox x:Name="Encryption_Padding_ComboBox" Margin="0,0,10,100" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60" ItemsSource="{Binding ComboxEncryptionPadding}" DisplayMemberPath="Name" SelectedValuePath="Value" Background="#383838" Foreground="#EBDBB2"/>
+                        <Label x:Name="Encryption_Padding_Label" FontSize="10" Margin="0,0,10,120" Content="Padding" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="60" Foreground="#FBF1C7"/>
+                        <ComboBox x:Name="Encryption_Padding_ComboBox" Margin="0,0,10,100" SelectionChanged="ComboBox_SelectionChanged" Cursor="Arrow" VerticalAlignment="Bottom" IsReadOnly="True" HorizontalAlignment="Right" Width="60" ItemsSource="{Binding ComboxEncryptionPadding}" DisplayMemberPath="Name" SelectedValuePath="Value" Background="#32302F" Foreground="#FBF1C7" pu:ComboBoxHelper.SelectedBackground="#665C54" pu:ComboBoxHelper.HoverBackground="#504945"/>
 
-                        <TextBox x:Name="EncryptionKey_Textbox" Margin="10,0,10,50" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1" Text="{Binding Text}" Height="25" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#383838" Foreground="#EBDBB2"/>
-                        <TextBox x:Name="EncryptionIV_Textbox" Margin="10,0,10,10" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1" Text="{Binding Text}" Height="25" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#383838" Foreground="#EBDBB2"/>
+                        <TextBox x:Name="EncryptionKey_Textbox" Margin="10,0,10,50" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1" Text="{Binding Text}" Height="25" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#282828" Foreground="#FBF1C7"/>
+                        <TextBox x:Name="EncryptionIV_Textbox" Margin="10,0,10,10" TextChanged="TextBox_TextChanged" VerticalAlignment="Bottom" MaxLength="8" MaxLines="1" Text="{Binding Text}" Height="25" pu:TextBoxHelper.CornerRadius="12" FontSize="12" Background="#282828" Foreground="#FBF1C7"/>
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="3" Margin="0,10,0,0" VerticalAlignment="Bottom">
-                    <Button x:Name="BeginBtn" Content="Begin" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Margin="30,0,100,10" Height="25" pu:ButtonHelper.ButtonStyle="Outline" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink" Background="LightBlue" Foreground="Black"/>
-                    <Button x:Name="Refresh" Content="⟳" Margin="520,0,30,10" Height="25" Click="Refresh_Click" pu:ButtonHelper.ButtonStyle="Outline" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink" Background="LightCoral" Foreground="Black"/>
+                    <Button x:Name="BeginBtn" Content="Begin" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Margin="30,0,100,10" Height="25" pu:ButtonHelper.ButtonStyle="Standard" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink" />
+                    <Button x:Name="Refresh" Content="⟳" Margin="520,0,30,10" Height="25" Click="Refresh_Click" pu:ButtonHelper.ButtonStyle="Standard" pu:ButtonHelper.CornerRadius="12" pu:ButtonHelper.ClickStyle="Sink" />
                 </Grid>
             </Grid>
             <Grid Grid.Column="1" VerticalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                    <RadioButton x:Name="JsonView_RadioBtn"  Margin="4" IsChecked="True" Content="Json" Checked="Radiobtn_Checked" pu:RadioButtonHelper.RadioButtonStyle="Button" pu:RadioButtonHelper.CheckedBackground="Gray" Background="#7C6F64" Foreground="#EBDBB2"/>
-                    <RadioButton x:Name="TemplateView_RadioBtn" Margin="4" IsChecked="False" Content="Template" Checked="Radiobtn_Checked" pu:RadioButtonHelper.RadioButtonStyle="Button" pu:RadioButtonHelper.CheckedBackground="Gray" Background="#7C6F64" Foreground="#EBDBB2"/>
+                    <RadioButton x:Name="JsonView_RadioBtn"  Margin="4" IsChecked="True" Content="Json" Checked="Radiobtn_Checked" pu:RadioButtonHelper.RadioButtonStyle="Button" pu:RadioButtonHelper.CheckedBackground="Gray" pu:RadioButtonHelper.CheckedGlyphBrush="White" Background="#7C6F64" Foreground="#FBF1C7"/>
+                    <RadioButton x:Name="TemplateView_RadioBtn" Margin="4" IsChecked="False" Content="Template" Checked="Radiobtn_Checked" pu:RadioButtonHelper.RadioButtonStyle="Button"  pu:RadioButtonHelper.CheckedBackground="Gray" pu:RadioButtonHelper.CheckedGlyphBrush="White" Background="#7C6F64" Foreground="#FBF1C7"/>
                 </StackPanel>
                 <Grid Margin="0,45,0,0">
-                    <avalonEdit:TextEditor x:Name="TextView" FontFamily="Consolas" SyntaxHighlighting="Json" FontSize="12pt" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" ShowLineNumbers="True" VerticalScrollBarVisibility="Auto" WordWrap="True" Background="#383838"  Foreground="#EBDBB2"/>
+                    <avalonEdit:TextEditor x:Name="TextView" FontFamily="Consolas" SyntaxHighlighting="Json" FontSize="12pt" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" ShowLineNumbers="True" VerticalScrollBarVisibility="Auto" WordWrap="True" Background="#383838"  Foreground="#FBF1C7"/>
                 </Grid>
             </Grid>
         </Grid>
         <Grid>
-            <ProgressBar x:Name="ProgressBar" Margin="10,0,10,0" VerticalAlignment="Bottom" Value="90"/>
+            <ProgressBar x:Name="ProgressBar" Margin="10,0,10,0" Height="5" VerticalAlignment="Bottom" Value="90" Foreground="#B8BB26" pu:ProgressBarHelper.ProgressBarStyle="Standard"/>
         </Grid>
     </Grid>
 </pu:WindowX>
