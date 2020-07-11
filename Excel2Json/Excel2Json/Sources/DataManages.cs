@@ -5,7 +5,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+
 using ExcelDataReader;
+
 using Newtonsoft.Json;
 
 namespace Excel2
@@ -139,10 +141,10 @@ namespace Excel2
                         switch (_template)
                         {
                             case TemplateType.CS:
-                                tmp = (new CSDefineGenerator().CSGenerator(name + item.TableName, _headNum, item));
+                                tmp = (new CSDefineGenerator().CSGenerator(/*name + */item.TableName, _headNum, item));
                                 break;
                             case TemplateType.TS:
-                                tmp = (new TypeScriptGenerator().TSGenerator(name + item.TableName, _headNum, item));
+                                tmp = (new TypeScriptGenerator().TSGenerator(/*name + */item.TableName, _headNum, item));
                                 break;
                         }
                         if (!TemplateData.ContainsKey(name + item.TableName))
