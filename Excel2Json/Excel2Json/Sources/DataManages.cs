@@ -95,8 +95,8 @@ namespace Excel2
                     {
                         object sheetValue = ConvertSheetToArray(item, _headNum);
                         string jsonContext = JsonConvert.SerializeObject(sheetValue, jsonSettings);
-                        if (!JsonData.ContainsKey(name + item.TableName))
-                            JsonData.Add(name + item.TableName, jsonContext);
+                        if (!JsonData.ContainsKey(/*name + */item.TableName))
+                            JsonData.Add(/*name + */item.TableName, jsonContext);
                     }
                 }
             }
@@ -139,14 +139,14 @@ namespace Excel2
                         switch (_template)
                         {
                             case TemplateType.CS:
-                                tmp = (new CSDefineGenerator().CSGenerator(name + item.TableName, _headNum, item));
+                                tmp = (new CSDefineGenerator().CSGenerator(/*name + */item.TableName, _headNum, item));
                                 break;
                             case TemplateType.TS:
-                                tmp = (new TypeScriptGenerator().TSGenerator(name + item.TableName, _headNum, item));
+                                tmp = (new TypeScriptGenerator().TSGenerator(/*name + */item.TableName, _headNum, item));
                                 break;
                         }
-                        if (!TemplateData.ContainsKey(name + item.TableName))
-                            TemplateData.Add(name + item.TableName, tmp);
+                        if (!TemplateData.ContainsKey(/*name + */item.TableName))
+                            TemplateData.Add(/*name + */item.TableName, tmp);
                     }
                 }
 
