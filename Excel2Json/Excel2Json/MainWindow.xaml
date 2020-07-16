@@ -104,11 +104,11 @@
                                 <GridViewColumn Header="FileName" Width="auto"  DisplayMemberBinding="{Binding FileName}"/>
                             </GridView>
                         </ListView.View>
-                        <ListView.ContextMenu>
+                        <!--<ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Export" Click="MenuItem_RightClick" />
                             </ContextMenu>
-                        </ListView.ContextMenu>
+                        </ListView.ContextMenu>-->
                     </ListView>
                 </Grid>
                 <Grid Grid.Row="2">
@@ -258,7 +258,7 @@
                         x:Name="ProgressBar"
                         Height="5" Value="80" 
                         Foreground= "DodgerBlue"
-                        Margin="20,0,20,10"  
+                        Margin="20,0,20,10"
                         pu:ProgressBarHelper.CornerRadius="5"
                         VerticalAlignment="Bottom"/>
                 </Grid>

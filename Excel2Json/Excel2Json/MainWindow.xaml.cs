@@ -202,7 +202,7 @@ namespace Excel2
 
             TextView.SyntaxHighlighting = JsonHighlighting;
 
-            SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
+            //SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
 
             SetEncryptionUI(false);
             //MutilSheet_Label.IsEnabled = MultiSheet;
@@ -232,7 +232,7 @@ namespace Excel2
             }
             else
             {
-                ProgressBar.Maximum = mDataManages.FilesCount(HeadNum, isExistTemplatePath);
+                ProgressBar.Maximum = mDataManages.FilesCount(HeadNum, isExistTemplatePath, MultiSheet);
                 ProgressBar.Value = 0;
                 mBgworker.WorkerReportsProgress = true;
                 mBgworker.DoWork += mDoWorkEventHandler;
@@ -404,23 +404,49 @@ namespace Excel2
             }
             else
             {
-                json = "";
-                foreach (var item in mDataManages.JsonData)
-                {
-                    if (/*item.Key.Contains(name) && */item.Value != null)
-                    {
-                        json += "\n======> " + item.Key + " <======\n";
-                        json += item.Value;
-                    }
-                }
+                //json = "";
+                //foreach (var item in mDataManages.JsonData)
+                //{
+                //    if (/*item.Key.Contains(name) && */item.Value != null)
+                //    {
+                //        json += "\n======> " + item.Key + " <======\n";
+                //        json += item.Value;
+                //    }
+                //}
 
-                template = "";
-                foreach (var item in mDataManages.TemplateData)
+                //template = "";
+                //foreach (var item in mDataManages.TemplateData)
+                //{
+                //    if (/*item.Key.Contains(name) && */item.Value != null)
+                //    {
+                //        template += "\n======> " + item.Key + " <======\n";
+                //        template += item.Value;
+                //    }
+                //}
+                if (mDataManages.MultipleJsonData.ContainsKey(name))
                 {
-                    if (/*item.Key.Contains(name) && */item.Value != null)
+                    json = "";
+                    //foreach (var JsonDatas in mDataManages.MultipleJsonData)
                     {
-                        template += "\n======> " + item.Key + " <======\n";
-                        template += item.Value;
+                        Dictionary<string, string> data = mDataManages.MultipleJsonData[name];
+                        foreach (var item in data)
+                        {
+                            json += '"' + name + "_" + item.Key + '"' + "\n";
+                            json += item.Value;
+                            json += "\n\n";
+                        }
+                    }
+
+                    template = "";
+                    //foreach (var TemplDatas in mDataManages.MultipleTemplateData)
+                    {
+                        Dictionary<string, string> data = mDataManages.MultipleTemplateData[name];
+                        foreach (var item in data)
+                        {
+                            template += "/// " + name + "_" + item.Key + "\n";
+                            template += item.Value;
+                            template += "\n";
+                        }
                     }
                 }
             }
@@ -473,8 +499,8 @@ namespace Excel2
                     JsonRadioBtnChecked = true;
                     if (TextView != null)
                     {
-                        TextView.SyntaxHighlighting = JsonHighlighting;
                         TextView.Text = JsonData;
+                        TextView.SyntaxHighlighting = JsonHighlighting;
                     }
                     return;
                 case "TemplateView_RadioBtn":
@@ -482,11 +508,11 @@ namespace Excel2
                     JsonRadioBtnChecked = false;
                     if (TextView != null)
                     {
+                        TextView.Text = TemplateData;
                         if (CSRadioBtnChecked)
                             TextView.SyntaxHighlighting = CSHighlighting;
                         else if (TSRadioBtnChecked)
                             TextView.SyntaxHighlighting = TSHighlighting;
-                        TextView.Text = TemplateData;
                     }
                     return;
             }
@@ -527,7 +553,7 @@ namespace Excel2
         {
             if (Directory.Exists(JsonPath.Text))
             {
-                mDataManages.SaveFiles(JsonPath.Text, TemplatePath.Text, HeadNum, Type, (d, v) =>
+                mDataManages.SaveFiles(JsonPath.Text, TemplatePath.Text, HeadNum, Type, MultiSheet, (d, v) =>
                  {
                      mBgworker.ReportProgress((int)d);
                      FileName = v;
@@ -538,7 +564,7 @@ namespace Excel2
         private void SetUIStates(bool _isEnable)
         {
 
-         if (BeginBtn != null)
+            if (BeginBtn != null)
             {
                 BeginBtn.Content = _isEnable ? "Begin" : "";
                 BeginBtn.IsEnabled = _isEnable;
