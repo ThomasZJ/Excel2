@@ -19,6 +19,9 @@ namespace Excel2
 
     internal class DataManages
     {
+
+        private StringBuilder ErrorLog = new StringBuilder();
+
         /// <summary>
         /// Excel Data
         /// </summary>
@@ -119,6 +122,22 @@ namespace Excel2
                         data.Add(item.TableName, jsonContext);
                     }
                 }
+            }
+            //File.CreateText(@"C:\Error.log").WriteLine(ErrorLog.ToString());
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string str = path + "\\Error.log";
+            using (FileStream file = new FileStream(str, FileMode.Create, FileAccess.Write))
+            {
+                using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
+                {
+                    writer.Write(ErrorLog.ToString());
+                }
+                file.Close();
+            }
+            DialogResult result = MessageBox.Show("Look the log file in " + str, "Has Error", MessageBoxButtons.OK);
+            if (result == DialogResult.OK)
+            {
+                System.Diagnostics.Process.Start("explorer.exe", path);
             }
         }
 
@@ -228,6 +247,9 @@ namespace Excel2
             ExcelData.Clear();
             JsonData.Clear();
             TemplateData.Clear();
+            MultipleJsonData.Clear();
+            MultipleTemplateData.Clear();
+            ErrorLog.Clear();
         }
 
         public void SaveFiles(string _jsonPath, string _templatePath, int _headNum, TemplateType _type, bool _MultiSheet, Action<double, string> _callback)
@@ -447,7 +469,7 @@ namespace Excel2
             for (int i = _firstDataRow; i < _dt.Rows.Count; i++)
             {
                 DataRow row = _dt.Rows[i];
-                values.Add(ConvertRowToDict(_dt, row, _firstDataRow));
+                values.Add(ConvertRowToDict(_dt, row, _firstDataRow, i));
             }
             return values;
         }
@@ -479,49 +501,51 @@ namespace Excel2
         /// <summary>
         /// 把一行数据转换成一个对象，每一列是一个属性
         /// </summary>
-        private Dictionary<string, object> ConvertRowToDict(DataTable _dt, DataRow row, int firstDataRow)
+        private Dictionary<string, object> ConvertRowToDict(DataTable _dt, DataRow row, int firstDataRow, int _idx = 0)
         {
             var rowData = new Dictionary<string, object>();
             foreach (DataColumn column in _dt.Columns)
             {
                 object value = row[column];
-
+                object val = row[1];
                 if (value.GetType() == typeof(System.DBNull))
                 {
-                    value = GetColumnDefault(_dt, column, firstDataRow);
+                    value = "NULL"; //  GetColumnDefault(_dt, column, firstDataRow);
+                    ErrorLog.Append(_dt.TableName + ":" + (int.Parse(column.ColumnName.Replace("Column", "")) + 1) + "列-" + (_idx + 1) + "行\n");
                 }
                 else if (firstDataRow > 1)
                 {
-                    try
-                    {
-                        switch (_dt.Rows[1][column])
-                        {
-                            case "int":
-                                if (value.GetType() == typeof(double))
-                                { // 去掉数值字段的“.0”
-                                    double num = (double)value;
-                                    if ((int)num == num)
-                                        value = (int)num;
-                                }
-                                else
-                                    value = int.Parse(value.ToString());
-                                break;
-                            case "float":
-                                value = float.Parse(value.ToString());
-                                break;
-                            case "double":
-                                value = double.Parse(value.ToString());
-                                break;
-                            default:
-                                value = value.ToString();
-                                break;
-                        }
-                    }
-                    catch (FormatException)
-                    {
-                        // throw new FormatException("has not correct format");
-                        value = value.ToString();
-                    }
+                    value = value.ToString();
+                    //try
+                    //{
+                    //    switch (_dt.Rows[1][column])
+                    //    {
+                    //        case "int":
+                    //            if (value.GetType() == typeof(double))
+                    //            { // 去掉数值字段的“.0”
+                    //                double num = (double)value;
+                    //                if ((int)num == num)
+                    //                    value = (int)num;
+                    //            }
+                    //            else
+                    //                value = int.Parse(value.ToString());
+                    //            break;
+                    //        case "float":
+                    //            value = float.Parse(value.ToString());
+                    //            break;
+                    //        case "double":
+                    //            value = double.Parse(value.ToString());
+                    //            break;
+                    //        default:
+                    //            value = value.ToString();
+                    //            break;
+                    //    }
+                    //}
+                    //catch (FormatException)
+                    //{
+                    //    // throw new FormatException("has not correct format");
+                    //    value = value.ToString();
+                    //}
                 }
                 // 表头自动转换成小写
                 //if (lowcase)
@@ -529,7 +553,6 @@ namespace Excel2
                 string fieldName = _dt.Rows[0][column].ToString();
                 rowData[fieldName] = value;
             }
-
             return rowData;
         }
 
