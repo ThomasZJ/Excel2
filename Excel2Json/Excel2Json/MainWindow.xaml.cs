@@ -602,9 +602,37 @@ namespace Excel2
                         mDataManages.ExportTemplate(item, HeadNum, MultiSheet, Type, SheetSign.Text);
                     }
                 }
+
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    ShowErrorDialog();
+                }));
             }
         }
 
+
+        private void ShowErrorDialog()
+        {
+            if (!string.IsNullOrEmpty(mDataManages.ErrorLog.ToString()))
+            {
+                //File.CreateText(@"C:\Error.log").WriteLine(ErrorLog.ToString());
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string str = path + "\\Error.log";
+                using (FileStream file = new FileStream(str, FileMode.Create, FileAccess.Write))
+                {
+                    using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
+                    {
+                        writer.Write(mDataManages.ErrorLog.ToString());
+                    }
+                    file.Close();
+                }
+                MessageBoxResult result = MessageBoxX.Show(" ", "Look the log file in\n" + str, Application.Current.MainWindow, MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.OK)
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", path);
+                }
+            }
+        }
         private void ShowFileList()
         {
             TextView?.Clear();

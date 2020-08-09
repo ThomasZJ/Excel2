@@ -20,7 +20,7 @@ namespace Excel2
     internal class DataManages
     {
 
-        private StringBuilder ErrorLog = new StringBuilder();
+        public StringBuilder ErrorLog { get; private set; } = new StringBuilder();
 
         /// <summary>
         /// Excel Data
@@ -53,7 +53,7 @@ namespace Excel2
         public string Key { get; set; }
         public string IV { get; set; }
         public bool CanEncryption { get; set; }
-
+        private string FileName;
         public DataManages()
         {
             ExcelData = new Dictionary<string, DataSet>();
@@ -97,7 +97,7 @@ namespace Excel2
                 DataTable dataTabale = excelData.Tables[0];
                 if (dataTabale.Rows.Count > 0 && dataTabale.Columns.Count > 0)
                 {
-                    object sheetValue = ConvertSheetToArray(dataTabale, _headNum);
+                    object sheetValue = ConvertSheetToArray(dataTabale, _headNum, name);
                     //object sheetValue = ConvertSheetToDict(dataTabale, _headNum);
                     string context = JsonConvert.SerializeObject(sheetValue, jsonSettings);
                     if (!JsonData.ContainsKey(name))
@@ -112,7 +112,7 @@ namespace Excel2
                     if (!string.IsNullOrEmpty(_sheetSign) && item.TableName.Contains(_sheetSign)) continue;
                     if (item.Rows.Count > 0 && item.Columns.Count > 0)
                     {
-                        object sheetValue = ConvertSheetToArray(item, _headNum);
+                        object sheetValue = ConvertSheetToArray(item, _headNum, name);
                         string jsonContext = JsonConvert.SerializeObject(sheetValue, jsonSettings);
 
                         if (!MultipleJsonData.ContainsKey(name))
@@ -122,22 +122,6 @@ namespace Excel2
                         data.Add(item.TableName, jsonContext);
                     }
                 }
-            }
-            //File.CreateText(@"C:\Error.log").WriteLine(ErrorLog.ToString());
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string str = path + "\\Error.log";
-            using (FileStream file = new FileStream(str, FileMode.Create, FileAccess.Write))
-            {
-                using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
-                {
-                    writer.Write(ErrorLog.ToString());
-                }
-                file.Close();
-            }
-            DialogResult result = MessageBox.Show("Look the log file in " + str, "Has Error", MessageBoxButtons.OK);
-            if (result == DialogResult.OK)
-            {
-                System.Diagnostics.Process.Start("explorer.exe", path);
             }
         }
 
@@ -463,13 +447,13 @@ namespace Excel2
         /// <param name="_dt">DataTable </param>
         /// <param name="_firstDataRow">the excel's first line except head (不包含表头的第一行) </param>
         /// <returns></returns>
-        private object ConvertSheetToArray(DataTable _dt, int _firstDataRow)
+        private object ConvertSheetToArray(DataTable _dt, int _firstDataRow, string _fileName)
         {
             List<object> values = new List<object>();
             for (int i = _firstDataRow; i < _dt.Rows.Count; i++)
             {
                 DataRow row = _dt.Rows[i];
-                values.Add(ConvertRowToDict(_dt, row, _firstDataRow, i));
+                values.Add(ConvertRowToDict(_dt, row, _firstDataRow, _fileName, i));
             }
             return values;
         }
@@ -477,7 +461,7 @@ namespace Excel2
         /// <summary>
         /// 以第一列为ID，转换成ID->Object的字典对象
         /// </summary>
-        private object ConvertSheetToDict(DataTable _dt, int _firstDataRow)
+        private object ConvertSheetToDict(DataTable _dt, int _firstDataRow, string _fileName)
         {
             Dictionary<string, object> importData =
                 new Dictionary<string, object>();
@@ -490,7 +474,7 @@ namespace Excel2
                 if (ID.Length <= 0)
                     ID = string.Format("row_{0}", i);
 
-                var rowObject = ConvertRowToDict(_dt, row, _firstDataRow);
+                var rowObject = ConvertRowToDict(_dt, row, _firstDataRow, _fileName);
                 rowObject[ID] = ID;
                 importData[ID] = rowObject;
             }
@@ -501,17 +485,16 @@ namespace Excel2
         /// <summary>
         /// 把一行数据转换成一个对象，每一列是一个属性
         /// </summary>
-        private Dictionary<string, object> ConvertRowToDict(DataTable _dt, DataRow row, int firstDataRow, int _idx = 0)
+        private Dictionary<string, object> ConvertRowToDict(DataTable _dt, DataRow row, int firstDataRow, string _fileName, int _idx = 0)
         {
             var rowData = new Dictionary<string, object>();
             foreach (DataColumn column in _dt.Columns)
             {
                 object value = row[column];
-                object val = row[1];
                 if (value.GetType() == typeof(System.DBNull))
                 {
                     value = "NULL"; //  GetColumnDefault(_dt, column, firstDataRow);
-                    ErrorLog.Append(_dt.TableName + ":" + (int.Parse(column.ColumnName.Replace("Column", "")) + 1) + "列-" + (_idx + 1) + "行\n");
+                    ErrorLog.AppendLine("文件:" + _fileName + " 表: " + _dt.TableName + " : 第" + (int.Parse(column.ColumnName.Replace("Column", "")) + 1) + "列 第" + (_idx + 1) + "行空");
                 }
                 else if (firstDataRow > 1)
                 {
