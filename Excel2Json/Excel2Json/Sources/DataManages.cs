@@ -5,10 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
-
 using ExcelDataReader;
-
 using Newtonsoft.Json;
 
 namespace Excel2
@@ -16,10 +13,8 @@ namespace Excel2
     /// <summary>
     /// 导出文件类型
     /// </summary>
-
     internal class DataManages
     {
-
         public StringBuilder ErrorLog { get; private set; } = new StringBuilder();
 
         /// <summary>
@@ -54,6 +49,7 @@ namespace Excel2
         public string IV { get; set; }
         public bool CanEncryption { get; set; }
         private string FileName;
+
         public DataManages()
         {
             ExcelData = new Dictionary<string, DataSet>();
@@ -76,8 +72,10 @@ namespace Excel2
                         ExcelData.Add(name, dataSet);
                     excelReader.Close();
                 }
+
                 stream.Close();
             }
+
             return dataSet;
         }
 
@@ -119,6 +117,7 @@ namespace Excel2
                         {
                             MultipleJsonData.Add(name, data);
                         }
+
                         data.Add(item.TableName, jsonContext);
                     }
                 }
@@ -147,6 +146,7 @@ namespace Excel2
                             tmp = (new TypeScriptGenerator().TSGenerator(name, _headNum, dataTabale));
                             break;
                     }
+
                     if (!TemplateData.ContainsKey(name))
                         TemplateData.Add(name, tmp);
                 }
@@ -169,14 +169,15 @@ namespace Excel2
                                 tmp = (new TypeScriptGenerator().TSGenerator(item.TableName, _headNum, item));
                                 break;
                         }
+
                         if (!MultipleTemplateData.ContainsKey(name))
                         {
                             MultipleTemplateData.Add(name, data);
                         }
+
                         data.Add(item.TableName, tmp);
                     }
                 }
-
             }
         }
 
@@ -209,6 +210,7 @@ namespace Excel2
                     {
                         tempCount += item.Value.Count;
                     }
+
                     return jsonCount + tempCount;
                 }
                 else
@@ -218,6 +220,7 @@ namespace Excel2
                     {
                         jsonCount += item.Value.Count;
                     }
+
                     return jsonCount;
                 }
             }
@@ -264,9 +267,11 @@ namespace Excel2
                                 {
                                     writer.Write(context);
                                 }
+
                                 file.Close();
                                 _callback(1, item.Key + ".json");
                             }
+
                             Thread.Sleep(time);
                         }
                     }
@@ -286,6 +291,7 @@ namespace Excel2
                         default:
                             break;
                     }
+
                     int time = 3000 / FilesCount(_headNum, false, _MultiSheet);
                     foreach (var Template in MultipleTemplateData)
                     {
@@ -304,9 +310,11 @@ namespace Excel2
                                 {
                                     writer.Write(context);
                                 }
+
                                 file.Close();
                                 _callback(1, item.Key + ".json");
                             }
+
                             Thread.Sleep(time);
                         }
                     }
@@ -340,9 +348,11 @@ namespace Excel2
                         {
                             writer.Write(jsonData);
                         }
+
                         file.Close();
                         callback(1, item.Key + ".json");
                     }
+
                     Thread.Sleep(time);
                 }
             }
@@ -364,6 +374,7 @@ namespace Excel2
                         default:
                             break;
                     }
+
                     string fileName = templatePath + "\\" + item.Key + suffix;
                     string templateData = item.Value;
 
@@ -376,9 +387,11 @@ namespace Excel2
                         {
                             writer.Write(templateData);
                         }
+
                         file.Close();
                         callback(1, item.Key + suffix);
                     }
+
                     Thread.Sleep(time);
                 }
             }
@@ -390,7 +403,8 @@ namespace Excel2
             {
                 if (JsonData.ContainsKey(_fileName))
                 {
-                    string fileName = _jsonPath + "\\" + _fileName + ".json"; ;
+                    string fileName = _jsonPath + "\\" + _fileName + ".json";
+                    ;
                     string jsonData = JsonData[_fileName];
                     if (CanEncryption)
                         jsonData = DesEncrypt(Key, IV, jsonData, Mode, Padding);
@@ -400,6 +414,7 @@ namespace Excel2
                         {
                             writer.Write(jsonData);
                         }
+
                         file.Close();
                         callback?.Invoke(_fileName + ".json");
                     }
@@ -422,6 +437,7 @@ namespace Excel2
                         default:
                             break;
                     }
+
                     string fileName = templatePath + "\\" + _fileName + suffix;
                     string templateData = TemplateData[_fileName];
 
@@ -434,6 +450,7 @@ namespace Excel2
                         {
                             writer.Write(templateData);
                         }
+
                         file.Close();
                         callback?.Invoke(_fileName + suffix);
                     }
@@ -455,6 +472,7 @@ namespace Excel2
                 DataRow row = _dt.Rows[i];
                 values.Add(ConvertRowToDict(_dt, row, _firstDataRow, _fileName, i));
             }
+
             return values;
         }
 
@@ -463,8 +481,7 @@ namespace Excel2
         /// </summary>
         private object ConvertSheetToDict(DataTable _dt, int _firstDataRow, string _fileName)
         {
-            Dictionary<string, object> importData =
-                new Dictionary<string, object>();
+            Dictionary<string, object> importData = new Dictionary<string, object>();
 
             int firstDataRow = 0;
             for (int i = firstDataRow; i < _dt.Rows.Count; i++)
@@ -491,7 +508,7 @@ namespace Excel2
             foreach (DataColumn column in _dt.Columns)
             {
                 object value = row[column];
-                if (value.GetType() == typeof(System.DBNull))
+                if (value.GetType() == typeof(DBNull))
                 {
                     value = "NULL"; //  GetColumnDefault(_dt, column, firstDataRow);
                     ErrorLog.AppendLine("文件:" + _fileName + " 表: " + _dt.TableName + " : 第" + (int.Parse(column.ColumnName.Replace("Column", "")) + 1) + "列 第" + (_idx + 1) + "行空");
@@ -530,12 +547,14 @@ namespace Excel2
                     //    value = value.ToString();
                     //}
                 }
+
                 // 表头自动转换成小写
                 //if (lowcase)
                 //    fieldName = fieldName.ToLower();
                 string fieldName = _dt.Rows[0][column].ToString();
                 rowData[fieldName] = value;
             }
+
             return rowData;
         }
 
@@ -548,13 +567,14 @@ namespace Excel2
             {
                 object value = sheet.Rows[i][column];
                 Type valueType = value.GetType();
-                if (valueType != typeof(System.DBNull))
+                if (valueType != typeof(DBNull))
                 {
                     if (valueType.IsValueType)
                         return Activator.CreateInstance(valueType);
                     break;
                 }
             }
+
             return "";
         }
 
@@ -568,8 +588,10 @@ namespace Excel2
                 {
                     sb.Append("0");
                 }
+
                 _key = sb.ToString();
             }
+
             byte[] inputByteArray = Encoding.UTF8.GetBytes(_orgText);
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
             des.Mode = _mode;
@@ -585,7 +607,8 @@ namespace Excel2
             {
                 ret.AppendFormat("{0:X2}", b);
             }
-            string encryptStr = ret.ToString();  // Encoding.UTF8.GetString(ms.ToArray());
+
+            string encryptStr = ret.ToString(); // Encoding.UTF8.GetString(ms.ToArray());
             return encryptStr;
         }
     }
