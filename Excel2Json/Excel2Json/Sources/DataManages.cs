@@ -15,23 +15,34 @@ namespace Excel2
     /// <summary>
     /// 导出文件类型
     /// </summary>
-
     internal class DataManages
     {
+        public StringBuilder ErrorLog { get; private set; } = new StringBuilder();
+
         /// <summary>
         /// Excel Data
         /// </summary>
         public Dictionary<string, DataSet> ExcelData { get; }
 
         /// <summary>
-        /// Json Data
+        /// Json Data for Single
         /// </summary>
         public Dictionary<string, string> JsonData { get; }
 
         /// <summary>
-        /// Template Data
+        /// Template Data for Single
         /// </summary>
         public Dictionary<string, string> TemplateData { get; }
+
+        /// <summary>
+        /// Json Data for Multiple
+        /// </summary>
+        public Dictionary<string, Dictionary<string, string>> MultipleJsonData;
+
+        /// <summary>
+        /// Template Data for Multiple
+        /// </summary>
+        public Dictionary<string, Dictionary<string, string>> MultipleTemplateData;
 
         public CipherMode Mode { set; get; }
         public PaddingMode Padding { set; get; }
@@ -39,12 +50,15 @@ namespace Excel2
         public string Key { get; set; }
         public string IV { get; set; }
         public bool CanEncryption { get; set; }
+        private string FileName;
 
         public DataManages()
         {
             ExcelData = new Dictionary<string, DataSet>();
             JsonData = new Dictionary<string, string>();
             TemplateData = new Dictionary<string, string>();
+            MultipleJsonData = new Dictionary<string, Dictionary<string, string>>();
+            MultipleTemplateData = new Dictionary<string, Dictionary<string, string>>();
         }
 
         public DataSet ReadExcel(FileInfo _file)
@@ -60,8 +74,10 @@ namespace Excel2
                         ExcelData.Add(name, dataSet);
                     excelReader.Close();
                 }
+
                 stream.Close();
             }
+
             return dataSet;
         }
 
@@ -81,7 +97,7 @@ namespace Excel2
                 DataTable dataTabale = excelData.Tables[0];
                 if (dataTabale.Rows.Count > 0 && dataTabale.Columns.Count > 0)
                 {
-                    object sheetValue = ConvertSheetToArray(dataTabale, _headNum);
+                    object sheetValue = ConvertSheetToArray(dataTabale, _headNum, name);
                     //object sheetValue = ConvertSheetToDict(dataTabale, _headNum);
                     string context = JsonConvert.SerializeObject(sheetValue, jsonSettings);
                     if (!JsonData.ContainsKey(name))
@@ -90,15 +106,21 @@ namespace Excel2
             }
             else
             {
+                Dictionary<string, string> data = new Dictionary<string, string>();
                 foreach (DataTable item in excelData.Tables)
                 {
                     if (!string.IsNullOrEmpty(_sheetSign) && item.TableName.Contains(_sheetSign)) continue;
                     if (item.Rows.Count > 0 && item.Columns.Count > 0)
                     {
-                        object sheetValue = ConvertSheetToArray(item, _headNum);
+                        object sheetValue = ConvertSheetToArray(item, _headNum, name);
                         string jsonContext = JsonConvert.SerializeObject(sheetValue, jsonSettings);
-                        if (!JsonData.ContainsKey(name + item.TableName))
-                            JsonData.Add(name + item.TableName, jsonContext);
+
+                        if (!MultipleJsonData.ContainsKey(name))
+                        {
+                            MultipleJsonData.Add(name, data);
+                        }
+
+                        data.Add(item.TableName, jsonContext);
                     }
                 }
             }
@@ -126,12 +148,14 @@ namespace Excel2
                             tmp = (new TypeScriptGenerator().TSGenerator(name, _headNum, dataTabale));
                             break;
                     }
+
                     if (!TemplateData.ContainsKey(name))
                         TemplateData.Add(name, tmp);
                 }
             }
             else
             {
+                Dictionary<string, string> data = new Dictionary<string, string>();
                 foreach (DataTable item in excelData.Tables)
                 {
                     if (!string.IsNullOrEmpty(_sheetSign) && item.TableName.Contains(_sheetSign)) continue;
@@ -141,17 +165,21 @@ namespace Excel2
                         switch (_template)
                         {
                             case TemplateType.CS:
-                                tmp = (new CSDefineGenerator().CSGenerator(/*name + */item.TableName, _headNum, item));
+                                tmp = (new CSDefineGenerator().CSGenerator(item.TableName, _headNum, item));
                                 break;
                             case TemplateType.TS:
-                                tmp = (new TypeScriptGenerator().TSGenerator(/*name + */item.TableName, _headNum, item));
+                                tmp = (new TypeScriptGenerator().TSGenerator(item.TableName, _headNum, item));
                                 break;
                         }
-                        if (!TemplateData.ContainsKey(name + item.TableName))
-                            TemplateData.Add(name + item.TableName, tmp);
+
+                        if (!MultipleTemplateData.ContainsKey(name))
+                        {
+                            MultipleTemplateData.Add(name, data);
+                        }
+
+                        data.Add(item.TableName, tmp);
                     }
                 }
-
             }
         }
 
@@ -160,13 +188,44 @@ namespace Excel2
         /// </summary>
         /// <param name="_headNum">excel 文件头</param>
         /// <returns></returns>
-        public int FilesCount(int _headNum, bool _isExistTemplatePath)
+        public int FilesCount(int _headNum, bool _isExistTemplatePath, bool _MultiSheet)
         {
-            if (_headNum > 1 && _isExistTemplatePath)
-                return JsonData.Count + TemplateData.Count;
+            if (!_MultiSheet)
+            {
+                if (_headNum > 1 && _isExistTemplatePath)
+                    return JsonData.Count + TemplateData.Count;
+                else
+                    return JsonData.Count;
+            }
             else
-                return JsonData.Count;
+            {
+                if (_headNum > 1 && _isExistTemplatePath)
+                {
+                    int jsonCount = 0;
+                    int tempCount = 0;
+                    foreach (var item in MultipleJsonData)
+                    {
+                        jsonCount += item.Value.Count;
+                    }
 
+                    foreach (var item in MultipleTemplateData)
+                    {
+                        tempCount += item.Value.Count;
+                    }
+
+                    return jsonCount + tempCount;
+                }
+                else
+                {
+                    int jsonCount = 0;
+                    foreach (var item in MultipleJsonData)
+                    {
+                        jsonCount += item.Value.Count;
+                    }
+
+                    return jsonCount;
+                }
+            }
         }
 
         /// <summary>
@@ -177,6 +236,92 @@ namespace Excel2
             ExcelData.Clear();
             JsonData.Clear();
             TemplateData.Clear();
+            MultipleJsonData.Clear();
+            MultipleTemplateData.Clear();
+            ErrorLog.Clear();
+        }
+
+        public void SaveFiles(string _jsonPath, string _templatePath, int _headNum, TemplateType _type, bool _MultiSheet, Action<double, string> _callback)
+        {
+            if (!_MultiSheet)
+            {
+                SaveFiles(_jsonPath, _templatePath, _headNum, _type, _callback);
+            }
+            else
+            {
+                if (Directory.Exists(_jsonPath))
+                {
+                    int time = 3000 / FilesCount(_headNum, false, _MultiSheet);
+                    foreach (var JsonDatas in MultipleJsonData)
+                    {
+                        Dictionary<string, string> data = JsonDatas.Value;
+                        foreach (var item in data)
+                        {
+                            string fileName = _jsonPath + "\\" + item.Key + ".json";
+                            string context = item.Value;
+
+                            if (CanEncryption)
+                                context = DesEncrypt(Key, IV, context, Mode, Padding);
+
+                            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                            {
+                                using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
+                                {
+                                    writer.Write(context);
+                                }
+
+                                file.Close();
+                                _callback(1, item.Key + ".json");
+                            }
+
+                            Thread.Sleep(time);
+                        }
+                    }
+                }
+
+                if (Directory.Exists(_templatePath))
+                {
+                    string suffix = "";
+                    switch (_type)
+                    {
+                        case TemplateType.CS:
+                            suffix = ".cs";
+                            break;
+                        case TemplateType.TS:
+                            suffix = ".ts";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    int time = 3000 / FilesCount(_headNum, false, _MultiSheet);
+                    foreach (var Template in MultipleTemplateData)
+                    {
+                        Dictionary<string, string> data = Template.Value;
+                        foreach (var item in data)
+                        {
+                            string fileName = _templatePath + "\\" + item.Key + suffix;
+                            string context = item.Value;
+
+                            if (CanEncryption)
+                                context = DesEncrypt(Key, IV, context, Mode, Padding);
+
+                            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                            {
+                                using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
+                                {
+                                    writer.Write(context);
+                                }
+
+                                file.Close();
+                                _callback(1, item.Key + ".json");
+                            }
+
+                            Thread.Sleep(time);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -205,9 +350,11 @@ namespace Excel2
                         {
                             writer.Write(jsonData);
                         }
+
                         file.Close();
                         callback(1, item.Key + ".json");
                     }
+
                     Thread.Sleep(time);
                 }
             }
@@ -229,6 +376,7 @@ namespace Excel2
                         default:
                             break;
                     }
+
                     string fileName = templatePath + "\\" + item.Key + suffix;
                     string templateData = item.Value;
 
@@ -241,9 +389,11 @@ namespace Excel2
                         {
                             writer.Write(templateData);
                         }
+
                         file.Close();
                         callback(1, item.Key + suffix);
                     }
+
                     Thread.Sleep(time);
                 }
             }
@@ -255,7 +405,8 @@ namespace Excel2
             {
                 if (JsonData.ContainsKey(_fileName))
                 {
-                    string fileName = _jsonPath + "\\" + _fileName + ".json"; ;
+                    string fileName = _jsonPath + "\\" + _fileName + ".json";
+                    ;
                     string jsonData = JsonData[_fileName];
                     if (CanEncryption)
                         jsonData = DesEncrypt(Key, IV, jsonData, Mode, Padding);
@@ -265,6 +416,7 @@ namespace Excel2
                         {
                             writer.Write(jsonData);
                         }
+
                         file.Close();
                         callback?.Invoke(_fileName + ".json");
                     }
@@ -287,6 +439,7 @@ namespace Excel2
                         default:
                             break;
                     }
+
                     string fileName = templatePath + "\\" + _fileName + suffix;
                     string templateData = TemplateData[_fileName];
 
@@ -299,6 +452,7 @@ namespace Excel2
                         {
                             writer.Write(templateData);
                         }
+
                         file.Close();
                         callback?.Invoke(_fileName + suffix);
                     }
@@ -312,24 +466,24 @@ namespace Excel2
         /// <param name="_dt">DataTable </param>
         /// <param name="_firstDataRow">the excel's first line except head (不包含表头的第一行) </param>
         /// <returns></returns>
-        private object ConvertSheetToArray(DataTable _dt, int _firstDataRow)
+        private object ConvertSheetToArray(DataTable _dt, int _firstDataRow, string _fileName)
         {
             List<object> values = new List<object>();
             for (int i = _firstDataRow; i < _dt.Rows.Count; i++)
             {
                 DataRow row = _dt.Rows[i];
-                values.Add(ConvertRowToDict(_dt, row, _firstDataRow));
+                values.Add(ConvertRowToDict(_dt, row, _firstDataRow, _fileName, i));
             }
+
             return values;
         }
 
         /// <summary>
         /// 以第一列为ID，转换成ID->Object的字典对象
         /// </summary>
-        private object ConvertSheetToDict(DataTable _dt, int _firstDataRow)
+        private object ConvertSheetToDict(DataTable _dt, int _firstDataRow, string _fileName)
         {
-            Dictionary<string, object> importData =
-                new Dictionary<string, object>();
+            Dictionary<string, object> importData = new Dictionary<string, object>();
 
             int firstDataRow = 0;
             for (int i = firstDataRow; i < _dt.Rows.Count; i++)
@@ -339,7 +493,7 @@ namespace Excel2
                 if (ID.Length <= 0)
                     ID = string.Format("row_{0}", i);
 
-                var rowObject = ConvertRowToDict(_dt, row, _firstDataRow);
+                var rowObject = ConvertRowToDict(_dt, row, _firstDataRow, _fileName);
                 rowObject[ID] = ID;
                 importData[ID] = rowObject;
             }
@@ -350,50 +504,52 @@ namespace Excel2
         /// <summary>
         /// 把一行数据转换成一个对象，每一列是一个属性
         /// </summary>
-        private Dictionary<string, object> ConvertRowToDict(DataTable _dt, DataRow row, int firstDataRow)
+        private Dictionary<string, object> ConvertRowToDict(DataTable _dt, DataRow row, int firstDataRow, string _fileName, int _idx = 0)
         {
             var rowData = new Dictionary<string, object>();
             foreach (DataColumn column in _dt.Columns)
             {
                 object value = row[column];
-
-                if (value.GetType() == typeof(System.DBNull))
+                if (value.GetType() == typeof(DBNull))
                 {
-                    value = GetColumnDefault(_dt, column, firstDataRow);
+                    value = "NULL"; //  GetColumnDefault(_dt, column, firstDataRow);
+                    ErrorLog.AppendLine("文件:" + _fileName + " 表: " + _dt.TableName + " : 第" + (int.Parse(column.ColumnName.Replace("Column", "")) + 1) + "列 第" + (_idx + 1) + "行空");
                 }
                 else if (firstDataRow > 1)
                 {
-                    try
-                    {
-                        switch (_dt.Rows[1][column])
-                        {
-                            case "int":
-                                if (value.GetType() == typeof(double))
-                                { // 去掉数值字段的“.0”
-                                    double num = (double)value;
-                                    if ((int)num == num)
-                                        value = (int)num;
-                                }
-                                else
-                                    value = int.Parse(value.ToString());
-                                break;
-                            case "float":
-                                value = float.Parse(value.ToString());
-                                break;
-                            case "double":
-                                value = double.Parse(value.ToString());
-                                break;
-                            default:
-                                value = value.ToString();
-                                break;
-                        }
-                    }
-                    catch (FormatException)
-                    {
-                        // throw new FormatException("has not correct format");
-                        value = value.ToString();
-                    }
+                    value = value.ToString();
+                    //try
+                    //{
+                    //    switch (_dt.Rows[1][column])
+                    //    {
+                    //        case "int":
+                    //            if (value.GetType() == typeof(double))
+                    //            { // 去掉数值字段的“.0”
+                    //                double num = (double)value;
+                    //                if ((int)num == num)
+                    //                    value = (int)num;
+                    //            }
+                    //            else
+                    //                value = int.Parse(value.ToString());
+                    //            break;
+                    //        case "float":
+                    //            value = float.Parse(value.ToString());
+                    //            break;
+                    //        case "double":
+                    //            value = double.Parse(value.ToString());
+                    //            break;
+                    //        default:
+                    //            value = value.ToString();
+                    //            break;
+                    //    }
+                    //}
+                    //catch (FormatException)
+                    //{
+                    //    // throw new FormatException("has not correct format");
+                    //    value = value.ToString();
+                    //}
                 }
+
                 // 表头自动转换成小写
                 //if (lowcase)
                 //    fieldName = fieldName.ToLower();
@@ -413,13 +569,14 @@ namespace Excel2
             {
                 object value = sheet.Rows[i][column];
                 Type valueType = value.GetType();
-                if (valueType != typeof(System.DBNull))
+                if (valueType != typeof(DBNull))
                 {
                     if (valueType.IsValueType)
                         return Activator.CreateInstance(valueType);
                     break;
                 }
             }
+
             return "";
         }
 
@@ -433,8 +590,10 @@ namespace Excel2
                 {
                     sb.Append("0");
                 }
+
                 _key = sb.ToString();
             }
+
             byte[] inputByteArray = Encoding.UTF8.GetBytes(_orgText);
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
             des.Mode = _mode;
@@ -450,7 +609,8 @@ namespace Excel2
             {
                 ret.AppendFormat("{0:X2}", b);
             }
-            string encryptStr = ret.ToString();  // Encoding.UTF8.GetString(ms.ToArray());
+
+            string encryptStr = ret.ToString(); // Encoding.UTF8.GetString(ms.ToArray());
             return encryptStr;
         }
     }

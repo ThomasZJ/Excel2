@@ -16,20 +16,21 @@ using System.Collections.Generic;
 using System.Windows.Data;
 using MaterialDesignThemes.Wpf;
 using MaterialDesignColors;
+using Panuon.UI.Silver;
 
 namespace Excel2
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : WindowX
     {
         private Grid mMainGrid;
 
         //private TextEditor mDotTemplate_TextBox;
 
         private readonly DataManages mDataManages;
-        private readonly ObservableCollection<ListViewItemData> ListViweItemData;
+        private readonly ObservableCollection<ListViewItemData> ListViewData;
 
         public string FileName { get; set; }
 
@@ -103,7 +104,7 @@ namespace Excel2
             mDoShowFileHandler = new DoWorkEventHandler(DoShowFileList);
             mBgShowFileList.DoWork += mDoShowFileHandler;
 
-            ListViweItemData = new ObservableCollection<ListViewItemData>();
+            ListViewData = new ObservableCollection<ListViewItemData>();
 
             ExcelPath = new TextBoxData();
             JsonPath = new TextBoxData();
@@ -115,6 +116,7 @@ namespace Excel2
             ExcelPath.Text = Properties.Settings.Default.ExcelPath;
             JsonPath.Text = Properties.Settings.Default.JsonPath;
             TemplatePath.Text = Properties.Settings.Default.TemplatePath;
+
             HeadNum = Properties.Settings.Default.HeadNum;
             MultiSheet = Properties.Settings.Default.MultiSheet;
             CSRadioBtnChecked = Properties.Settings.Default.CSRadioBtnChecked;
@@ -165,9 +167,10 @@ namespace Excel2
         {
             mMainGrid = sender as Grid;
 
-            ExcelListView.ItemsSource = ListViweItemData;
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ExcelListView.ItemsSource);
-            view.Filter = UserFilter;
+            ExcelListView.ItemsSource = ListViewData;
+
+            //CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ExcelListView.ItemsSource);
+            //view.Filter = UserFilter;
 
             ExcelPath_TextBox.DataContext = ExcelPath;
             JsonPath_TextBox.DataContext = JsonPath;
@@ -182,9 +185,9 @@ namespace Excel2
                 BeginBtn.Click += (s, ee) => Button_ClickAsync(s, ee);
             }
 
-            FilterNum_ComboBox.SelectedIndex = HeadNum - 1;
-
             ProgressBar.Value = 0;
+
+            FilterNum_ComboBox.SelectedIndex = HeadNum - 1;
 
             Mutilsheet_Checkbox.IsChecked = MultiSheet;
             Signsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
@@ -192,26 +195,17 @@ namespace Excel2
             EncryptionKey.Text = "";
             EncryptionIV.Text = "";
 
-            Dotcs_RadioBtn.IsChecked = CSRadioBtnChecked;
-            Dotts_RadioBtn.IsChecked = TSRadioBtnChecked;
+            //Dotcs_RadioBtn.IsChecked = CSRadioBtnChecked;
+            //Dotts_RadioBtn.IsChecked = TSRadioBtnChecked;
 
-            if (!CSRadioBtnChecked && !TSRadioBtnChecked) Dotcs_RadioBtn.IsChecked = true;
+            //if (!CSRadioBtnChecked && !TSRadioBtnChecked) Dotcs_RadioBtn.IsChecked = true;
 
             TextView.SyntaxHighlighting = JsonHighlighting;
 
-            SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
+            //SetColor(Properties.Settings.Default.Color, Properties.Settings.Default.Theme);
 
             SetEncryptionUI(false);
-            MutilSheet_Label.IsEnabled = MultiSheet;
-
-
-            List<ThemesListBoxItem> list = new List<ThemesListBoxItem>();
-            ThemesListbox.ItemsSource = list;
-
-            foreach (var item in Enum.GetValues(typeof(Themes)))
-            {
-                list.Add(new ThemesListBoxItem(item.ToString()));
-            };
+            //MutilSheet_Label.IsEnabled = MultiSheet;
         }
 
         private void Button_ClickAsync(object sender, RoutedEventArgs e)
@@ -231,14 +225,14 @@ namespace Excel2
             if (!isExistExclePath || !isExistJsonPath)
             {
                 if (!isExistExclePath)
-                    _ = MessageBox.Show("ExcelPath does not exist!", "Directory not exist!");
+                    _ = MessageBoxX.Show("Directory not exist!", "ExcelPath does not exist!", Application.Current.MainWindow);
                 else if (!isExistJsonPath)
-                    _ = MessageBox.Show("JsonPath does not exist!", "Directory not exist");
+                    _ = MessageBoxX.Show("Directory not exist", "JsonPath does not exist!", Application.Current.MainWindow);
                 SetUIStates(true);
             }
             else
             {
-                ProgressBar.Maximum = mDataManages.FilesCount(HeadNum, isExistTemplatePath);
+                ProgressBar.Maximum = mDataManages.FilesCount(HeadNum, isExistTemplatePath, MultiSheet);
                 ProgressBar.Value = 0;
                 mBgworker.WorkerReportsProgress = true;
                 mBgworker.DoWork += mDoWorkEventHandler;
@@ -256,8 +250,9 @@ namespace Excel2
             {
                 return;
             }
-            //string s = mFolderDialog.FileName;
-            //Trace.WriteLine(s);
+            ////string s = mFolderDialog.FileName;
+            ////Trace.WriteLine(s);
+
             if (((Button)sender).Equals(ExcelPathBtn))
                 ExcelPath.Text = mFolderDialog.FileName;// FolderDialog.SelectedPath.Trim();
 
@@ -287,7 +282,7 @@ namespace Excel2
                     MultiSheet = (bool)cb.IsChecked;
                     Properties.Settings.Default.MultiSheet = MultiSheet;
                     Signsheet_Textbox.Visibility = MultiSheet ? Visibility.Visible : Visibility.Hidden;
-                    MutilSheet_Label.IsEnabled = MultiSheet;
+                    //MutilSheet_Label.IsEnabled = MultiSheet;
                     ShowFileList();
                     break;
             }
@@ -335,16 +330,16 @@ namespace Excel2
                     if (Properties.Settings.Default.HeadNum != HeadNum)
                         ShowFileList();
 
-                    if (HeadNum > 1)
-                    {
-                        Dotcs_RadioBtn.Visibility = Visibility.Visible;
-                        Dotts_RadioBtn.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        Dotcs_RadioBtn.Visibility = Visibility.Hidden;
-                        Dotts_RadioBtn.Visibility = Visibility.Hidden;
-                    }
+                    //if (HeadNum > 1)
+                    //{
+                    //    Dotcs_RadioBtn.Visibility = Visibility.Visible;
+                    //    Dotts_RadioBtn.Visibility = Visibility.Visible;
+                    //}
+                    //else
+                    //{
+                    //    Dotcs_RadioBtn.Visibility = Visibility.Hidden;
+                    //    Dotts_RadioBtn.Visibility = Visibility.Hidden;
+                    //}
 
                     Properties.Settings.Default.HeadNum = HeadNum;
                     break;
@@ -409,23 +404,49 @@ namespace Excel2
             }
             else
             {
-                json = "";
-                foreach (var item in mDataManages.JsonData)
-                {
-                    if (item.Key.Contains(name) && item.Value != null)
-                    {
-                        json += "\n======> " + item.Key + " <======\n";
-                        json += item.Value;
-                    }
-                }
+                //json = "";
+                //foreach (var item in mDataManages.JsonData)
+                //{
+                //    if (/*item.Key.Contains(name) && */item.Value != null)
+                //    {
+                //        json += "\n======> " + item.Key + " <======\n";
+                //        json += item.Value;
+                //    }
+                //}
 
-                template = "";
-                foreach (var item in mDataManages.TemplateData)
+                //template = "";
+                //foreach (var item in mDataManages.TemplateData)
+                //{
+                //    if (/*item.Key.Contains(name) && */item.Value != null)
+                //    {
+                //        template += "\n======> " + item.Key + " <======\n";
+                //        template += item.Value;
+                //    }
+                //}
+                if (mDataManages.MultipleJsonData.ContainsKey(name))
                 {
-                    if (item.Key.Contains(name) && item.Value != null)
+                    json = "";
+                    //foreach (var JsonDatas in mDataManages.MultipleJsonData)
                     {
-                        template += "\n======> " + item.Key + " <======\n";
-                        template += item.Value;
+                        Dictionary<string, string> data = mDataManages.MultipleJsonData[name];
+                        foreach (var item in data)
+                        {
+                            json += '"' + name + "_" + item.Key + '"' + "\n";
+                            json += item.Value;
+                            json += "\n\n";
+                        }
+                    }
+
+                    template = "";
+                    //foreach (var TemplDatas in mDataManages.MultipleTemplateData)
+                    {
+                        Dictionary<string, string> data = mDataManages.MultipleTemplateData[name];
+                        foreach (var item in data)
+                        {
+                            template += "/// " + name + "_" + item.Key + "\n";
+                            template += item.Value;
+                            template += "\n";
+                        }
                     }
                 }
             }
@@ -450,7 +471,7 @@ namespace Excel2
             {
                 foreach (var item in mDataManages.JsonData)
                 {
-                    if (item.Key.Contains(name) && item.Value != null)
+                    if (/*item.Key.Contains(name) && */item.Value != null)
                     {
                         mDataManages.SaveFile(JsonPath.Text, TemplatePath.Text, HeadNum, Type, item.Key, null);
                     }
@@ -478,8 +499,8 @@ namespace Excel2
                     JsonRadioBtnChecked = true;
                     if (TextView != null)
                     {
-                        TextView.SyntaxHighlighting = JsonHighlighting;
                         TextView.Text = JsonData;
+                        TextView.SyntaxHighlighting = JsonHighlighting;
                     }
                     return;
                 case "TemplateView_RadioBtn":
@@ -487,11 +508,11 @@ namespace Excel2
                     JsonRadioBtnChecked = false;
                     if (TextView != null)
                     {
+                        TextView.Text = TemplateData;
                         if (CSRadioBtnChecked)
                             TextView.SyntaxHighlighting = CSHighlighting;
                         else if (TSRadioBtnChecked)
                             TextView.SyntaxHighlighting = TSHighlighting;
-                        TextView.Text = TemplateData;
                     }
                     return;
             }
@@ -521,7 +542,7 @@ namespace Excel2
 
             if (ProgressBar.Value >= ProgressBar.Maximum)
             {
-                MessageBox.Show("Finished!");
+                MessageBoxX.Show("", "Finished", Application.Current.MainWindow);
                 mBgworker.DoWork -= mDoWorkEventHandler;
                 mBgworker.ProgressChanged -= mProgressChangedEventHandler;
                 SetUIStates(true);
@@ -532,13 +553,12 @@ namespace Excel2
         {
             if (Directory.Exists(JsonPath.Text))
             {
-                mDataManages.SaveFiles(JsonPath.Text, TemplatePath.Text, HeadNum, Type, (d, v) =>
+                mDataManages.SaveFiles(JsonPath.Text, TemplatePath.Text, HeadNum, Type, MultiSheet, (d, v) =>
                  {
                      mBgworker.ReportProgress((int)d);
                      FileName = v;
                  });
             }
-
         }
 
         private void SetUIStates(bool _isEnable)
@@ -582,18 +602,46 @@ namespace Excel2
                         mDataManages.ExportTemplate(item, HeadNum, MultiSheet, Type, SheetSign.Text);
                     }
                 }
+
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    ShowErrorDialog();
+                }));
             }
         }
 
+
+        private void ShowErrorDialog()
+        {
+            if (!string.IsNullOrEmpty(mDataManages.ErrorLog.ToString()))
+            {
+                //File.CreateText(@"C:\Error.log").WriteLine(ErrorLog.ToString());
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string str = path + "\\Error.log";
+                using (FileStream file = new FileStream(str, FileMode.Create, FileAccess.Write))
+                {
+                    using (TextWriter writer = new StreamWriter(file, new UTF8Encoding(false)))
+                    {
+                        writer.Write(mDataManages.ErrorLog.ToString());
+                    }
+                    file.Close();
+                }
+                MessageBoxResult result = MessageBoxX.Show(" ", "Look the log file in\n" + str, Application.Current.MainWindow, MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.OK)
+                {
+                    System.Diagnostics.Process.Start("explorer.exe", path);
+                }
+            }
+        }
         private void ShowFileList()
         {
             TextView?.Clear();
-            ListViweItemData?.Clear();
+            ListViewData?.Clear();
             mDataManages?.ClearData();
             JsonRadioBtnChecked = true;
             TemplateRadioBtnChecked = false;
-            JsonView_RadioBtn.IsChecked = JsonRadioBtnChecked;
-            TemplateView_RadioBtn.IsChecked = TemplateRadioBtnChecked;
+            //JsonView_RadioBtn.IsChecked = JsonRadioBtnChecked;
+            //TemplateView_RadioBtn.IsChecked = TemplateRadioBtnChecked;
             //this.Width = this.MinWidth;
 
             if (Directory.Exists(ExcelPath.Text) && ExcelListView != null)
@@ -604,7 +652,7 @@ namespace Excel2
                 {
                     if (item.Extension.Equals(".xlsx") || item.Extension.Equals(".xls"))
                     {
-                        ListViweItemData.Add(new ListViewItemData((idx++).ToString(), item));
+                        ListViewData.Add(new ListViewItemData((idx++).ToString(), item));
                     }
                 }
             }
@@ -678,11 +726,11 @@ namespace Excel2
 
         private bool UserFilter(object item)
         {
-            if (String.IsNullOrEmpty(FilterList_TextBox.Text))
-                return true;
-            else
-                return ((item as ListViewItemData).FileName.IndexOf(FilterList_TextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            //if (String.IsNullOrEmpty(FilterList_TextBox.Text))
+            //    return true;
+            //else
+            //    return ((item as ListViewItemData).FileName.IndexOf(FilterList_TextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            return false;
         }
-
     }
 }
