@@ -5,9 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-
 using ExcelDataReader;
-
 using Newtonsoft.Json;
 
 namespace Excel2
@@ -88,10 +86,7 @@ namespace Excel2
             DataSet excelData = ExcelData[name];
             if (excelData == null) return;
 
-            var jsonSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            };
+            var jsonSettings = new JsonSerializerSettings { Formatting = Formatting.Indented };
             if (!_isMutiple)
             {
                 DataTable dataTabale = excelData.Tables[0];
@@ -510,14 +505,18 @@ namespace Excel2
             foreach (DataColumn column in _dt.Columns)
             {
                 object value = row[column];
-                if (value.GetType() == typeof(DBNull))
+                // if (value.GetType() == typeof(DBNull))
+                // {
+                //     value = "NULL"; //  GetColumnDefault(_dt, column, firstDataRow);
+                //     ErrorLog.AppendLine("文件:" + _fileName + " 表: " + _dt.TableName + " : 第" + (int.Parse(column.ColumnName.Replace("Column", "")) + 1) + "列 第" + (_idx + 1) + "行空");
+                // }
+                // else 
+                if (firstDataRow > 1)
                 {
-                    value = "NULL"; //  GetColumnDefault(_dt, column, firstDataRow);
-                    ErrorLog.AppendLine("文件:" + _fileName + " 表: " + _dt.TableName + " : 第" + (int.Parse(column.ColumnName.Replace("Column", "")) + 1) + "列 第" + (_idx + 1) + "行空");
-                }
-                else if (firstDataRow > 1)
-                {
-                    value = value.ToString();
+                    if (value.GetType() == typeof(DBNull))
+                        value = "";
+                    else
+                        value = value.ToString();
                     //try
                     //{
                     //    switch (_dt.Rows[1][column])
